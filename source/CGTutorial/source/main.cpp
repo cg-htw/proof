@@ -25,9 +25,7 @@ using namespace glm;
 // Other Libs
 #include "SOIL2/SOIL2.h"
 
-// Achtung, die OpenGL-Tutorials nutzen glfw 2.7, glfw kommt mit einem veränderten API schon in der Version 3
-
-// Befindet sich bei den OpenGL-Tutorials unter "common"
+// fromn OpenGL Tutorial
 #include "shader.hpp"
 
 // Wuerfel und Kugel
@@ -81,26 +79,20 @@ int main(void)
     }
     
     // Fehler werden auf stderr ausgegeben, s. o.
-    glfwSetErrorCallback(error_callback); // †bergeben zeiger auf funktion, die bei fehler ausgefŸhrt wird
+    glfwSetErrorCallback(error_callback); // ï¿½bergeben zeiger auf funktion, die bei fehler ausgefï¿½hrt wird
     
-    
-    // Die folgenden vier Zeilen sind nštig auf dem Mac
-    // Au§erdem mŸssen die zu ladenden Dateien bei der aktuellen Projektkonfiguration
-    // unter DerivedData/Build/Products/Debug (oder dann Release) zu finden sein
+    // Mac specific. Defines files to be present in DerivedData/Build/Products/Debug (or Release)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     // Open a window and create its OpenGL context
-    // glfwWindowHint vorher aufrufen, um erforderliche Resourcen festzulegen
-    // wegen * ist window pointer auf das objekt
-    GLFWwindow* window = glfwCreateWindow(WIDTH, // Breite
-                                          HEIGHT,  // Hoehe
-                                          "Car Race", // Ueberschrift
+    GLFWwindow* window = glfwCreateWindow(WIDTH, // width
+                                          HEIGHT,  // height
+                                          "Car Race", // Caption
                                           NULL,  // windowed mode
                                           NULL); // shared window
-    // ich kšnnte hier z.b. noch ein weiteres Fenster definieren. MŸsste dann zum rendern immer den context zu dem aktuellen window setzen. (glfwMakeContextCurrent(window2); Zumindest in manchen fŠllen, in anderen kann man bei dem jeweiligen Befehl das Fnester fŸr das es passieren soll angeben
     
     if (!window)
     {
@@ -108,13 +100,10 @@ int main(void)
         exit(EXIT_FAILURE);
     }
     
-    // Make the window's context current (wird nicht automatisch gemacht)
-    // Definiert, dass alles was gemalt wird in window gemalt wird. Um in verschiedene fenster zu malen
-    // immer diesen Befehl aufrufen mit dem entsprechenden Fenster.
+    // Make window's context the current context (not done automatically)
     glfwMakeContextCurrent(window);
     
-    // Initialize GLEW
-    // GLEW ermöglicht Zugriff auf OpenGL-API > 1.1
+    // Initialize GLEW (to acess OpenGL-API > 1.1)
     glewExperimental = true; // Needed for core profile
     
     if (glewInit() != GLEW_OK)
@@ -123,31 +112,24 @@ int main(void)
         return -1;
     }
     
-    // Auf Keyboard-Events reagieren
-    glfwSetKeyCallback(window, key_callback); // so kann man unterscheiden fŸr welches fenster man was definieren mšchte,...
+    // define wich key_callback function is to be used for the passed window
+    glfwSetKeyCallback(window, key_callback);
     
-    // Dark blue background
-    // RGB werte
-    // der 4. wert steht fŸr Allpha: Transparenz/Deckkraft (0 --> man sieht nichts, 1 komplett deckend). zw. 0-1. Bisher wird aber noch keine Transparenzdarstellung unterstŸzt
-    // die lšschfarbe wird gesetzt. die wird dann beim kl.schen, also in glClear verwendet. Sprich dort wird dann das gezeichnete mit der clearColor Ÿbermalt
-    //
+    // Set color to be used when clearing with rgba. Acts as background color
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
     
-    // Z-Buffer test aktivieren. (wenn pixel nŠher an betrachter ist als vorhandener in z-buffer, oder keiner vorhanden, dann malen)
+    // Enable z-buffer test (only paint pixel if there is no other pixel between it and the viewer)
     glEnable(GL_DEPTH_TEST);
     
-    // Accept fragment if it closer to the camera than the former one
-    // entspricht default, daher eig. nicht notwendig
+    // Accept fragment if it closer to the camera than the former one. (GL_LESS is defeaul, thus not required here)
     glDepthFunc(GL_LESS);
     
-    // Create and compile our GLSL program from the shaders
-    // sagt aus, dass der Vertex-shader das TVS-vs programm bekommt (mit programm ID, definiert in nŠchsten befehl
-    // und, dass Fragmentshader das CFS.fs bekommt
+    
+    // Create and compile our GLSL program from the passed shaders
     // programID = LoadShaders("resources/TransformVertexShader.vertexshader", "resources/ColorFragmentShader.fragmentshader");
     programID = LoadShaders("resources/StandardShading.vertexshader", "resources/StandardShading.fragmentshader");
     
-    
-    // Shader auch benutzen !
+    // Use the shader
     glUseProgram(programID);
     
     // TODO: Change to relative paths and make it work
@@ -155,35 +137,30 @@ int main(void)
     Shader shader( "/Users/janis/Documents/uni_ss19/CG/proof/source/CGTutorial/source/res/shaders/modelLoading.vs", "/Users/janis/Documents/uni_ss19/CG/proof/source/CGTutorial/source/res/shaders/modelLoading.frag" );
     
     // Load models
-//    Model ourModel( "/Users/janis/Documents/uni_ss19/CG/proof/source/CGTutorial/source/res/models/nanosuit.obj" );
+    //    Model ourModel( "/Users/janis/Documents/uni_ss19/CG/proof/source/CGTutorial/source/res/models/nanosuit.obj" );
     Model ourModel( "resources/Car/Chevrolet_Camaro_SS_1.3ds" );
     //Model ourModel( "resources/Car/Chevrolet_Camaro_SS_5.fbx" );
     
     
-    // 2     // damit sind dann daten zu grafikkarte Ÿbertragen.
-    // lesen daten ein
-    // arrays mit variabler lŠnge
+    // read data to be passed to graphics card later
+    // vectors are basically arrays with variable lenght
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
     bool res = loadOBJ("resources/teapot.obj", vertices, uvs, normals);
-    // bool res = loadOBJ("resources/Chevrolet_Camaro_SS_High.obj", vertices, uvs, normals);
-    // bool res = loadOBJ("resources/Car/Car_Obj.obj", vertices, uvs, normals);
-    //bool res = loadOBJ("resources/moskvitch.obj", vertices, uvs, normals);
     
-    // Jedes Objekt eigenem VAO zuordnen, damit mehrere Objekte moeglich sind
-    // VAOs sind Container fuer mehrere Buffer, die zusammen gesetzt werden sollen.
-    // Container anlegen, der VertexArryIDTeapot hei§en sol
-    GLuint vertexArrayIDTeapot;
+    // Assign each Object to its own VAO in order to be able to have multiple objects.
+    // VAOs (Vertex Array Objects) are Containers for multiple buffers to be set together.
+    GLuint vertexArrayIDTeapot; // Create container
     glGenVertexArrays(1, &vertexArrayIDTeapot);
     glBindVertexArray(vertexArrayIDTeapot);
     
-    // Eckpunkte anlegen, fŸllen mit vertices
+    // Eckpunkte anlegen, fuellen mit vertices
     // Ein ArrayBuffer speichert Daten zu Eckpunkten (hier xyz bzw. Position)
     GLuint vertexbuffer;
     glGenBuffers(1, &vertexbuffer); // Kennung erhalten
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer); // Daten zur Kennung definieren
-    // Buffer zugreifbar für die Shader machen
+    // Buffer zugreifbar fï¿½r die Shader machen
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
     
     // Erst nach glEnableVertexAttribArray kann DrawArrays auf die Daten zugreifen...
@@ -196,7 +173,7 @@ int main(void)
                           (void*) 0); // abweichender Datenanfang ?
     
     
-    GLuint uvbuffer; // Hier alles analog für Texturkoordinaten in location == 1 (2 floats u und v!)
+    GLuint uvbuffer; // Hier alles analog fuer Texturkoordinaten in location == 1 (2 floats u und v!)
     glGenBuffers(1, &uvbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
     glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
@@ -207,8 +184,8 @@ int main(void)
     GLuint texture = loadBMP_custom("resources/mandrill.bmp"); // texture eine zahl,
     
     
-    // †bertragen der normalen vektoren in container
-    GLuint normalbuffer; // Hier alles analog für Normalen in location == 2
+    // ï¿½bertragen der normalen vektoren in container
+    GLuint normalbuffer; // Hier alles analog fï¿½r Normalen in location == 2
     glGenBuffers(1, &normalbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
     glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
@@ -221,7 +198,7 @@ int main(void)
         // Clear the screen (depth of each frame, color)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+        // Projection matrix : 45ï¿½ Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
         projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
         
         // Camera matrix
@@ -230,11 +207,11 @@ int main(void)
                            glm::vec3(0,1,0)); // Head is up (set to 0,-1,0 to look upside-down)
         
         // Model matrix : an identity matrix (model will be at the origin)
-        // d.h. es gibt eine Variable, die Model hei§t, eine 4x4 Matrix ist, der wird das ergebnis von
-        // glm::mat4(1.0f), also die einheitsmatrix zugewiesen (1 auf HD, sonst 0)
+        //
+        // assign the result of glm::mat4(1.0f), which is the identity matrix (Einheitsmatrix) to the variable model.
         model = glm::mat4(1.0f);
         
-        // das glm:: wŠre an sich nicht notwendig, zeigt aber schšn wher die fkt kommt
+        // glm:: not nesecary because the glm namespace is used. (... but shows where the fct comers from)
         model = glm::rotate(model, angleX, glm::vec3( 1.0, 0.0, 0.0));
         model = glm::rotate(model, angleY, glm::vec3( 0.0, 1.0, 0.0));
         model = glm::rotate(model, angleZ, glm::vec3( 0.0, 0.0, 1.0));
@@ -242,12 +219,11 @@ int main(void)
         glm::mat4 save = model;
         model = glm::translate(model, glm::vec3(1.5, 0.0, 0.0));
         
-        // 3
-        // Skalieren, da sonst viel zu gro§
+
         model = glm::scale(model, glm::vec3(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0));
         
         // Bind our texture in Texture Unit 0
-        glActiveTexture(GL_TEXTURE0); // da multiple texturing mšglich ist notwendig anzugeben welche grad die gewollte ist fŸr dieses Texture Unit.
+        glActiveTexture(GL_TEXTURE0); // because of the option to use multiple texturing it ios required to define which texture to be active.
         glBindTexture(GL_TEXTURE_2D, texture);
         
         // Set our "myTextureSampler" sampler to user Texture Unit 0
@@ -255,7 +231,7 @@ int main(void)
         
         
         // Shader mitteilen wo sich das licht befindet.
-        // relativ beliebig wo, kšnnte auch vor schleife sein, wenn sich (wie bisher bei uns) die lampenposition nicht Šndert
+        // relativ beliebig wo, kï¿½nnte auch vor schleife sein, wenn sich (wie bisher bei uns) die lampenposition nicht ï¿½ndert
         // glm::vec3 lightPos = glm::vec3(4,4,-4);
         // glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
         
@@ -293,13 +269,13 @@ int main(void)
         
         
         
-        // draw WŸrfel
+        // draw Wï¿½rfel
         model = save;
         model = glm::translate(model, glm::vec3(-1.5, 0.0, 0.0));
         model = glm::scale(model, glm::vec3(1.0 / 5.0, 1.0 / 5.0, 1.0 / 5.0));
         
         // Bind our texture in Texture Unit 0
-        glActiveTexture(GL_TEXTURE0); // da multiple texturing mšglich ist notwendig anzugeben welche grad die gewollte ist fŸr dieses Texture Unit.
+        glActiveTexture(GL_TEXTURE0); // da multiple texturing mï¿½glich ist notwendig anzugeben welche grad die gewollte ist fï¿½r dieses Texture Unit.
         glBindTexture(GL_TEXTURE_2D, texture);
         
         sendMVP();
@@ -311,7 +287,7 @@ int main(void)
         glfwSwapBuffers(window);
         
         // Poll for and process events
-        // z.b. Maus oder Tastatureingabe ŸberprŸfen, wenn ja rufe die funktion key_callback auf, sofern diese vorhanden(Ja), oder mouse_callback,... (checkt ob vorhanden, wenn ja wirds ausgefŸhrt)
+        // z.b. Maus oder Tastatureingabe ï¿½berprï¿½fen, wenn ja rufe die funktion key_callback auf, sofern diese vorhanden(Ja), oder mouse_callback,... (checkt ob vorhanden, wenn ja wirds ausgefï¿½hrt)
         glfwPollEvents();
     }
     
@@ -320,7 +296,7 @@ int main(void)
     
     // 5
     // Cleanup VBO and shader
-    // nštig am ende wenn das programm terminiert. Macht aber alternativ auch das bettriebssystem
+    // nï¿½tig am ende wenn das programm terminiert. Macht aber alternativ auch das bettriebssystem
     glDeleteBuffers(1, &vertexbuffer);
     
     glDeleteBuffers(1, &normalbuffer);
@@ -335,7 +311,7 @@ int main(void)
 }
 
 /*
- Genau diese Parameter fŸr glfwSetErrorCallback(error_callback) nštig
+ Genau diese Parameter fï¿½r glfwSetErrorCallback(error_callback) nï¿½tig
  */
 void error_callback(int error, const char* description)
 {
@@ -357,6 +333,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             break;
     }
     
+    // single keys
     if(!(std::find(keys.begin(), keys.end(), GLFW_KEY_1) != keys.end())
        && !(std::find(keys.begin(), keys.end(), GLFW_KEY_2) != keys.end())
        && !(std::find(keys.begin(), keys.end(), GLFW_KEY_3) != keys.end())
@@ -390,42 +367,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
                 angleZ = angleZ + 0.1f;
                 break;
                 
-                /*case GLFW_KEY_Q: // GLFW_KEY_1 & GLFW_KEY_UP:
-                 angleZBaseSeg1 = angleZBaseSeg1 - 0.1f;
-                 break;
-                 
-                 case GLFW_KEY_A: // GLFW_KEY_1 & GLFW_KEY_DOWN:
-                 angleZBaseSeg1 = angleZBaseSeg1 + 0.1f;
-                 break;
-                 
-                 case GLFW_KEY_W: // GLFW_KEY_2 & GLFW_KEY_UP:
-                 angleZSeg1Seg2 = angleZSeg1Seg2 - 0.1f;
-                 break;
-                 
-                 case GLFW_KEY_S: // GLFW_KEY_2 & GLFW_KEY_DOWN:
-                 angleZSeg1Seg2 = angleZSeg1Seg2 + 0.1f;
-                 break;
-                 
-                 case GLFW_KEY_E: // GLFW_KEY_3 & GLFW_KEY_UP:
-                 angleZSeg2Seg3 = angleZSeg2Seg3 - 0.1f;
-                 break;
-                 
-                 case GLFW_KEY_D: // GLFW_KEY_4 & GLFW_KEY_DOWN:
-                 angleZSeg2Seg3 = angleZSeg2Seg3 + 0.1f;
-                 break;
-                 
-                 case GLFW_KEY_R:
-                 angleYBase = angleYBase - 0.1f;
-                 break;
-                 
-                 case GLFW_KEY_L:
-                 angleYBase = angleYBase + 0.1f;
-                 break;
-                 */
             default:
                 break;
         }
     }
+    
+    // key combinations
     
     if (std::find(keys.begin(), keys.end(), GLFW_KEY_LEFT_SHIFT) != keys.end()) {
         if(std::find(keys.begin(), keys.end(), GLFW_KEY_Z) != keys.end()){
@@ -502,9 +449,9 @@ void zeichneKS()
 void zeichneSeg(float h)
 {
     glm::mat4 Save = model;
-    model = glm::translate(model, glm::vec3(0.0, h / 2, 0.0)); // wie in schwarzer zeichnung (leserichtung aufwŠrts)
+    model = glm::translate(model, glm::vec3(0.0, h / 2, 0.0)); // wie in schwarzer zeichnung (leserichtung aufwï¿½rts)
     model = glm::scale(model, glm::vec3(h / 6.0, h / 2, h / 6.0 ));
-    //Model = glm::translate(Model, glm::vec3(0.0, 1.0, 0.0)); // alternativlšsung, wie in blauer zeichnung (leserichtung aufwŠrts)
+    //Model = glm::translate(Model, glm::vec3(0.0, 1.0, 0.0)); // alternativlï¿½sung, wie in blauer zeichnung (leserichtung aufwï¿½rts)
     
     sendMVP();
     // radius = 1; bezugskoordinatensystem: mittelpunkt des koordinatensystems im mittelpunkt
