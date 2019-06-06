@@ -36,7 +36,7 @@ using namespace glm;
 #include "texture.hpp"
 
 // Properties
-const GLuint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 1000, HEIGHT = 1400;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // for send_MVP
@@ -57,6 +57,10 @@ float angleZBaseSeg1 = 0.0f;
 float angleZSeg1Seg2 = 0.0f;
 float angleZSeg2Seg3 = 0.0f;
 
+float movement = 0.0f;
+float speed = 0.5f;
+float speedBackwards = 2.0f;
+float turn = 0; // gradmaß, Drehung
 std::vector<int> keys;
 
 
@@ -68,6 +72,7 @@ void sendMVP();
 void zeichneKS();
 void zeichneSeg(float h);
 // void DoMovement( );
+glm::mat4 drawCar(glm::mat4 model);
 
 int main(void)
 {
@@ -138,8 +143,13 @@ int main(void)
     
     // Load models
     //    Model ourModel( "/Users/janis/Documents/uni_ss19/CG/proof/source/CGTutorial/source/res/models/nanosuit.obj" );
-    Model ourModel( "resources/Car/Chevrolet_Camaro_SS_1.3ds" );
-    //Model ourModel( "resources/Car/Chevrolet_Camaro_SS_5.fbx" );
+//    Model carModel( "resources/Car/Chevrolet_Camaro_SS_1.3ds" );
+//    Model carModel( "resources/Car/Chevrolet_Camaro_SS_5.fbx" );
+//    Model carModel( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
+//    Model carModel( "resources/Car/ram3500.3ds" );
+    Model carModel( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
+    Model streetCurveA90Model ( "resources/Street/StreetCurveA90.fbx" );
+    
     
     
     // read data to be passed to graphics card later
@@ -147,7 +157,7 @@ int main(void)
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
-    bool res = loadOBJ("resources/teapot.obj", vertices, uvs, normals);
+    // bool res = loadOBJ("resources/teapot.obj", vertices, uvs, normals);
     
     // Assign each Object to its own VAO in order to be able to have multiple objects.
     // VAOs (Vertex Array Objects) are Containers for multiple buffers to be set together.
@@ -181,7 +191,8 @@ int main(void)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
     
     // Load the texture
-    GLuint texture = loadBMP_custom("resources/mandrill.bmp"); // texture eine zahl,
+//    GLuint texture = loadBMP_custom("resources/red.bmp"); // texture eine zahl,
+     GLuint texture = loadBMP_custom("resources/mandrill.bmp"); // texture eine zahl,
     
     
     // �bertragen der normalen vektoren in container
@@ -232,8 +243,8 @@ int main(void)
         
         // Shader mitteilen wo sich das licht befindet.
         // relativ beliebig wo, k�nnte auch vor schleife sein, wenn sich (wie bisher bei uns) die lampenposition nicht �ndert
-        // glm::vec3 lightPos = glm::vec3(4,4,-4);
-        // glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
+         glm::vec3 lightPos = glm::vec3(4,4,-4);
+         glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
         
         sendMVP();
         
@@ -263,25 +274,43 @@ int main(void)
         model = glm::translate(model, glm::vec3(0.0, 0.4, 0.0));
         model = glm::rotate(model, angleZSeg2Seg3, glm::vec3( 0.0, 0.0, 1.0));
         zeichneSeg(0.3);
-        
+
+        // Licht am roboterarm
         glm::vec4 lpw = model * glm::vec4(0.0, 0.3, 0.0, 1.0); // light position world
         glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lpw.x / lpw.w, lpw.y / lpw.w, lpw.z / lpw.w); // lpw.w = normalisierungszahl, ist aber bei uns sowieso 1
         
         
         
-        // draw W�rfel
+        // draw car
         model = save;
-        model = glm::translate(model, glm::vec3(-1.5, 0.0, 0.0));
-        model = glm::scale(model, glm::vec3(1.0 / 5.0, 1.0 / 5.0, 1.0 / 5.0));
-        
+        model = drawCar(model);
+//        model = glm::translate(model, glm::vec3(-1.5, 0.0, 0.0));
+//        double scaleFactor = 1.0 / 2.0;
+//        model = glm::scale(model, glm::vec3(scaleFactor, scaleFactor, scaleFactor));
+//
+//
+//
+//        model = glm::rotate(model, -95.0f, glm::vec3( 1.0, 0.0, 0.0));
         // Bind our texture in Texture Unit 0
         glActiveTexture(GL_TEXTURE0); // da multiple texturing m�glich ist notwendig anzugeben welche grad die gewollte ist f�r dieses Texture Unit.
         glBindTexture(GL_TEXTURE_2D, texture);
         
+        
         sendMVP();
         //drawCube();
         
-        ourModel.Draw( shader );
+        
+        carModel.Draw( shader );
+        
+        model = save;
+        
+        char filename[] = "rua.jpg";
+        GLint textureId = TextureFromFile(filename, "resources/Street");
+        streetCurveA90Model.setTexture(textureId);
+        
+        sendMVP();
+        streetCurveA90Model.Draw(shader);
+        
         
         // Swap buffers
         glfwSwapBuffers(window);
@@ -367,6 +396,38 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
                 angleZ = angleZ + 0.1f;
                 break;
                 
+              
+            // TODO: Gleichzeitig w/s + a/d/u/j
+                
+                // -1 = backwards, 0 = left, 1 = forward, 2 = right, 3 = -1
+            case GLFW_KEY_W:
+                movement = movement + speed;
+                break;
+                
+            case GLFW_KEY_S:
+                movement = movement - speedBackwards;
+                break;
+                
+            case GLFW_KEY_A:
+                turn = turn - 0.1f;
+                break;
+                
+            case GLFW_KEY_D:
+                turn = turn + 0.1f;
+                break;
+                
+            case GLFW_KEY_U:
+                if ( speed <= 3 ) {
+                    speed = speed + 0.5f;
+                }
+                break;
+                
+            case GLFW_KEY_J:
+                if ( speed >= 0.5 ) {
+                    speed = speed - 0.5f;
+                }
+                break;
+                
             default:
                 break;
         }
@@ -427,23 +488,23 @@ void sendMVP()
 
 void zeichneKS()
 {
-    glm::mat4 Save = model;
-    model = glm::scale(Save, glm::vec3(5.0,0.01,0.01));
+    glm::mat4 save = model;
+    model = glm::scale(save, glm::vec3(5.0,0.01,0.01));
     sendMVP();
     drawCube();
-    model=Save;
+    model=save;
     
-    Save = model;
-    model = glm::scale(Save, glm::vec3(0.01, 5.0, 0.01));
+    save = model;
+    model = glm::scale(save, glm::vec3(0.01, 5.0, 0.01));
     sendMVP();
     drawCube();
-    model=Save;
+    model=save;
     
-    Save = model;
-    model = glm::scale(Save, glm::vec3(0.01, 0.01, 5.0));
+    save = model;
+    model = glm::scale(save, glm::vec3(0.01, 0.01, 5.0));
     sendMVP();
     drawCube();
-    model=Save;
+    model=save;
 }
 
 void zeichneSeg(float h)
@@ -458,3 +519,28 @@ void zeichneSeg(float h)
     drawSphere(10.0, 10.0);
     model=Save;
 }
+
+glm::mat4 drawCar(glm::mat4 model)
+{
+//    zeichneKS();
+
+
+    model = glm::translate(model, glm::vec3(-1.5, 0.0, 0.0));
+    double scaleFactor = 1.0 / 10.0;
+    model = glm::scale(model, glm::vec3(scaleFactor, scaleFactor, scaleFactor));
+    
+    // initial rotation
+    model = glm::rotate(model, -95.0f, glm::vec3( 1.0, 0.0, 0.0));
+
+    
+    model = glm::translate(model, glm::vec3(0.0, -movement, 0.0));
+    model = glm::rotate(model, turn, glm::vec3( 0.0, 0.0, 1.0));
+    
+
+    // Problem: nach translate dreht sich das auto bei rotate immmernoch um den ursprünglichen punkt (anstatt um den mittelpunkt des autos)
+    // daher müssen wir im world space translaten anstatt im object space, da sonst
+    
+    // wir brauchebn die einzelnen transformationsmatrizen (rotationsmatrix, translationsmatrix), diese dann mtieinander multiplizieren und auf model anwenden 
+    return model;
+}
+

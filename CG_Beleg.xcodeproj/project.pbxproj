@@ -76,6 +76,7 @@
 		18D8A0E8229C64DB000B2709 /* modelLoading.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = modelLoading.frag; sourceTree = "<group>"; };
 		18D8A0E9229C64DB000B2709 /* modelLoading.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = modelLoading.vs; sourceTree = "<group>"; };
 		18D8A0EA229C64FC000B2709 /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
+		18F4FBAB22A004D100033D13 /* Behaviour.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Behaviour.hpp; sourceTree = "<group>"; };
 		B9F1A7941CFED506001A5641 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		B9F1A7951CFED506001A5641 /* objects.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = objects.cpp; sourceTree = "<group>"; };
 		B9F1A7961CFED506001A5641 /* objects.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = objects.hpp; sourceTree = "<group>"; };
@@ -220,8 +221,8 @@
 				B9F1A7941CFED506001A5641 /* main.cpp */,
 				B9F1A7951CFED506001A5641 /* objects.cpp */,
 				B9F1A7961CFED506001A5641 /* objects.hpp */,
-				18D8A0C4229C64C4000B2709 /* Camera.h */,
 				18D8A0C1229C64C4000B2709 /* Mesh.h */,
+				18D8A0C4229C64C4000B2709 /* Camera.h */,
 				18D8A0C2229C64C4000B2709 /* Model.h */,
 				18D8A0EA229C64FC000B2709 /* Shader.h */,
 				B9F1A7971CFED506001A5641 /* objloader.cpp */,
@@ -230,6 +231,7 @@
 				B9F1A79A1CFED506001A5641 /* shader.hpp */,
 				B9F1A79B1CFED506001A5641 /* texture.cpp */,
 				B9F1A79C1CFED506001A5641 /* texture.hpp */,
+				18F4FBAB22A004D100033D13 /* Behaviour.hpp */,
 			);
 			path = source;
 			sourceTree = "<group>";

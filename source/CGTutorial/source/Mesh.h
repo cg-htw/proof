@@ -36,6 +36,7 @@ public:
     vector<Vertex> vertices;
     vector<GLuint> indices;
     vector<Texture> textures;
+    GLuint textureId;
     
     /*  Functions  */
     // Constructor
@@ -49,9 +50,14 @@ public:
         this->setupMesh( );
     }
     
+    void setTexture(GLuint textId) {
+        textureId = textId;
+    }
+    
     // Render the mesh
     void Draw( Shader shader )
     {
+        /*
         // Bind appropriate textures
         GLuint diffuseNr = 1;
         GLuint specularNr = 1;
@@ -79,9 +85,13 @@ public:
             // And finally bind the texture
             glBindTexture( GL_TEXTURE_2D, this->textures[i].id );
         }
-        
+        */
         // Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
         glUniform1f( glGetUniformLocation( shader.Program, "material.shininess" ), 16.0f );
+        
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glUniform1i(glGetUniformLocation(shader.Program, "texture_diffuse"), 0);
         
         // Draw mesh
         glBindVertexArray( this->VAO );

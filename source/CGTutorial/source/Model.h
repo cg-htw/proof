@@ -31,6 +31,10 @@ public:
         this->loadModel( path );
     }
     
+    void setTexture(GLuint textId) {
+        this->meshes[0].setTexture(textId);
+    }
+    
     // Draws the model, and thus all its meshes
     void Draw( Shader shader )
     {
@@ -205,6 +209,7 @@ private:
         return textures;
     }
 };
+
 
 GLint TextureFromFile( const char *path, string directory )
 {
