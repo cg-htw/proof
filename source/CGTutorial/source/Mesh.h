@@ -57,11 +57,13 @@ public:
     // Render the mesh
     void Draw( Shader shader )
     {
+
         /*
-        // Bind appropriate textures
+        // Bind appropriate textures#include "shader.hpp"
         GLuint diffuseNr = 1;
         GLuint specularNr = 1;
-        
+
+
         for( GLuint i = 0; i < this->textures.size( ); i++ )
         {
             glActiveTexture( GL_TEXTURE0 + i ); // Active proper texture unit before binding
@@ -86,13 +88,15 @@ public:
             glBindTexture( GL_TEXTURE_2D, this->textures[i].id );
         }
         */
+
         // Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
         glUniform1f( glGetUniformLocation( shader.Program, "material.shininess" ), 16.0f );
-        
+
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textureId);
         glUniform1i(glGetUniformLocation(shader.Program, "texture_diffuse"), 0);
-        
+
         // Draw mesh
         glBindVertexArray( this->VAO );
         glDrawElements( GL_TRIANGLES, (float) this->indices.size( ), GL_UNSIGNED_INT, 0 );
@@ -134,12 +138,12 @@ private:
         // Vertex Positions
         glEnableVertexAttribArray( 0 );
         glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), ( GLvoid * )0 );
-        // Vertex Normals
-        glEnableVertexAttribArray( 1 );
-        glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), ( GLvoid * )offsetof( Vertex, Normal ) );
         // Vertex Texture Coords
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, sizeof( Vertex ), ( GLvoid * )offsetof( Vertex, TexCoords ) );
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, sizeof( Vertex ), ( GLvoid * )offsetof( Vertex, TexCoords ) );
+        // Vertex Normals
+        glEnableVertexAttribArray( 2 );
+        glVertexAttribPointer( 2, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), ( GLvoid * )offsetof( Vertex, Normal ) );
         
         glBindVertexArray( 0 );
     }

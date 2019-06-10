@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="proof"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake\;CMake Files\cmake\modules\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/zombie/CLionProjects/proof/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/zombie/CLionProjects/proof/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="proof">
+				<Option output="/home/zombie/CLionProjects/proof/cmake-build-debug/proof" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zombie/CLionProjects/proof/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/zombie/CLionProjects/proof/source/common/external/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 proof"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="proof/fast">
+				<Option output="/home/zombie/CLionProjects/proof/cmake-build-debug/proof" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zombie/CLionProjects/proof/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/zombie/CLionProjects/proof/source/common/external/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 proof/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/zombie/CLionProjects/proof/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/zombie/CLionProjects/proof/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/resources/ColorFragmentShader.fragmentshader">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/resources/StandardShading.fragmentshader">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/resources/StandardShading.vertexshader">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/resources/TransformVertexShader.vertexshader">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/Behaviour.hpp">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/Camera.h">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/Mesh.h">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/Model.h">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/Shader.h">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/StreetObject.h">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/main.cpp">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/objects.cpp">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/objects.hpp">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/objloader.cpp">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/objloader.hpp">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/res/shaders/lamp.frag">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/res/shaders/lamp.vs">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/res/shaders/lighting.frag">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/res/shaders/lighting.vs">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/res/shaders/modelLoading.frag">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/res/shaders/modelLoading.vs">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/shader.cpp">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/shader.hpp">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/texture.cpp">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/source/CGTutorial/source/texture.hpp">
+			<Option target="proof"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/cmake/modules/FindASSIMP.cmake">
+			<Option virtualFolder="CMake Files\cmake\modules\"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/cmake/modules/FindGLFW3.cmake">
+			<Option virtualFolder="CMake Files\cmake\modules\"/>
+		</Unit>
+		<Unit filename="/home/zombie/CLionProjects/proof/cmake/modules/FindGLM.cmake">
+			<Option virtualFolder="CMake Files\cmake\modules\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

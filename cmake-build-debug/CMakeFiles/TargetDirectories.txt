@@ -1,0 +1,3 @@
+/home/zombie/CLionProjects/proof/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/zombie/CLionProjects/proof/cmake-build-debug/CMakeFiles/proof.dir
+/home/zombie/CLionProjects/proof/cmake-build-debug/CMakeFiles/edit_cache.dir

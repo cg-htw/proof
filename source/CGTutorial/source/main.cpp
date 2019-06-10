@@ -7,6 +7,9 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
+//include Glut
+#include <GL/freeglut.h>
+
 // Include GLFW
 #include <GLFW/glfw3.h>
 
@@ -14,7 +17,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
-
+#include "StreetObject.h"
 
 // Include GLM
 #include <glm/glm.hpp>
@@ -71,11 +74,14 @@ void key_callback( GLFWwindow* window, int key, int scancode, int action, int mo
 void sendMVP();
 void zeichneKS();
 void zeichneSeg(float h);
+void drawText(const char *text, int length, int x, int y);
 // void DoMovement( );
 glm::mat4 drawCar(glm::mat4 model);
 
-int main(void)
+int main(int argc, char* argv[])
 {
+    glutInit(&argc, argv);
+
     // Initialise GLFW
     if (!glfwInit())
     {
@@ -116,7 +122,7 @@ int main(void)
         fprintf(stderr, "Failed to initialize GLEW\n");
         return -1;
     }
-    
+
     // define wich key_callback function is to be used for the passed window
     glfwSetKeyCallback(window, key_callback);
     
@@ -136,10 +142,10 @@ int main(void)
     
     // Use the shader
     glUseProgram(programID);
-    
-    // TODO: Change to relative paths and make it work
+
     // Setup and compile our shaders
-    Shader shader( "/Users/janis/Documents/uni_ss19/CG/proof/source/CGTutorial/source/res/shaders/modelLoading.vs", "/Users/janis/Documents/uni_ss19/CG/proof/source/CGTutorial/source/res/shaders/modelLoading.frag" );
+    Shader shader( "./source/res/shaders/modelLoading.vs", "./source/res/shaders/modelLoading.frag" );
+    //shader.Use();
     
     // Load models
     //    Model ourModel( "/Users/janis/Documents/uni_ss19/CG/proof/source/CGTutorial/source/res/models/nanosuit.obj" );
@@ -149,16 +155,17 @@ int main(void)
 //    Model carModel( "resources/Car/ram3500.3ds" );
     Model carModel( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
     Model streetCurveA90Model ( "resources/Street/StreetCurveA90.fbx" );
-    
-    
-    
+
+    StreetObject streetObject_1 (streetCurveA90Model);
+    StreetObject streetObject_2 (streetCurveA90Model);
+
     // read data to be passed to graphics card later
     // vectors are basically arrays with variable lenght
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
     // bool res = loadOBJ("resources/teapot.obj", vertices, uvs, normals);
-    
+
     // Assign each Object to its own VAO in order to be able to have multiple objects.
     // VAOs (Vertex Array Objects) are Containers for multiple buffers to be set together.
     GLuint vertexArrayIDTeapot; // Create container
@@ -182,17 +189,20 @@ int main(void)
                           0, // Eckpunkte direkt hintereinander gespeichert
                           (void*) 0); // abweichender Datenanfang ?
     
-    
+
     GLuint uvbuffer; // Hier alles analog fuer Texturkoordinaten in location == 1 (2 floats u und v!)
     glGenBuffers(1, &uvbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
     glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(1); // siehe layout im vertex shader
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    
-    // Load the texture
-//    GLuint texture = loadBMP_custom("resources/red.bmp"); // texture eine zahl,
-     GLuint texture = loadBMP_custom("resources/mandrill.bmp"); // texture eine zahl,
+
+    // Load the monkey_texture
+//    GLuint monkey_texture = loadBMP_custom("resources/red.bmp"); // monkey_texture eine zahl,
+     GLuint monkey_texture = loadBMP_custom("resources/mandrill.bmp"); // monkey_texture eine zahl,
+
+    char filename[] = "rua.jpg";
+    GLint street_texture = TextureFromFile(filename, "resources/Street");
     
     
     // �bertragen der normalen vektoren in container
@@ -211,14 +221,17 @@ int main(void)
         
         // Projection matrix : 45� Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
         projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-        
+
         // Camera matrix
-        view = glm::lookAt(glm::vec3(0,0,-5), // Camera is at (0,0,-5), in World Space
+        view = glm::lookAt(glm::vec3(0,2,-5), // Camera is at (0,2,-5), in World Space
                            glm::vec3(0,0,0),  // and looks at the origin
-                           glm::vec3(0,1,0)); // Head is up (set to 0,-1,0 to look upside-down)
-        
-        // Model matrix : an identity matrix (model will be at the origin)
+                           glm::vec3(0,1,0)); // Head is up (set to 0,-1,0 to look upside-down
+
+
+        // Y-Achse nach oben, X-Achse in den Bildschirm, Z-Achse nach rechts
+        view = glm::rotate(view, -1.5708f, glm::vec3( 0.0, 1.0, 0.0));
         //
+        // Model matrix : an identity matrix (model will be at the origin)
         // assign the result of glm::mat4(1.0f), which is the identity matrix (Einheitsmatrix) to the variable model.
         model = glm::mat4(1.0f);
         
@@ -226,16 +239,16 @@ int main(void)
         model = glm::rotate(model, angleX, glm::vec3( 1.0, 0.0, 0.0));
         model = glm::rotate(model, angleY, glm::vec3( 0.0, 1.0, 0.0));
         model = glm::rotate(model, angleZ, glm::vec3( 0.0, 0.0, 1.0));
-        
+
         glm::mat4 save = model;
         model = glm::translate(model, glm::vec3(1.5, 0.0, 0.0));
         
 
         model = glm::scale(model, glm::vec3(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0));
-        
-        // Bind our texture in Texture Unit 0
-        glActiveTexture(GL_TEXTURE0); // because of the option to use multiple texturing it ios required to define which texture to be active.
-        glBindTexture(GL_TEXTURE_2D, texture);
+
+        // Bind our monkey_texture in Texture Unit 0
+        glActiveTexture(GL_TEXTURE0); // because of the option to use multiple texturing it ios required to define which monkey_texture to be active.
+        glBindTexture(GL_TEXTURE_2D, monkey_texture);
         
         // Set our "myTextureSampler" sampler to user Texture Unit 0
         glUniform1i(glGetUniformLocation(programID, "myTextureSampler"), 0);
@@ -276,12 +289,13 @@ int main(void)
         zeichneSeg(0.3);
 
         // Licht am roboterarm
-        glm::vec4 lpw = model * glm::vec4(0.0, 0.3, 0.0, 1.0); // light position world
-        glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lpw.x / lpw.w, lpw.y / lpw.w, lpw.z / lpw.w); // lpw.w = normalisierungszahl, ist aber bei uns sowieso 1
+        //glm::vec4 lpw = model * glm::vec4(0.0, 0.3, 0.0, 1.0); // light position world
+        //glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lpw.x / lpw.w, lpw.y / lpw.w, lpw.z / lpw.w); // lpw.w = normalisierungszahl, ist aber bei uns sowieso 1
         
         
         
         // draw car
+
         model = save;
         model = drawCar(model);
 //        model = glm::translate(model, glm::vec3(-1.5, 0.0, 0.0));
@@ -291,27 +305,37 @@ int main(void)
 //
 //
 //        model = glm::rotate(model, -95.0f, glm::vec3( 1.0, 0.0, 0.0));
-        // Bind our texture in Texture Unit 0
-        glActiveTexture(GL_TEXTURE0); // da multiple texturing m�glich ist notwendig anzugeben welche grad die gewollte ist f�r dieses Texture Unit.
-        glBindTexture(GL_TEXTURE_2D, texture);
-        
-        
+        // Bind our monkey_texture in Texture Unit 0
+        //glActiveTexture(GL_TEXTURE0); // da multiple texturing m�glich ist notwendig anzugeben welche grad die gewollte ist f�r dieses Texture Unit.
+        //glBindTexture(GL_TEXTURE_2D, monkey_texture);
+
         sendMVP();
         //drawCube();
-        
-        
         carModel.Draw( shader );
-        
+
+        //Straße
         model = save;
-        
-        char filename[] = "rua.jpg";
-        GLint textureId = TextureFromFile(filename, "resources/Street");
-        streetCurveA90Model.setTexture(textureId);
-        
         sendMVP();
-        streetCurveA90Model.Draw(shader);
-        
-        
+        streetObject_1.setTexture(street_texture);
+        streetObject_1.draw(shader);
+
+        model = save;
+        model = glm::translate(model, glm::vec3(5.0, 0.0, 5.0));
+        model = glm::rotate(model, -1.5708f, glm::vec3( 0.0, 1.0, 0.0));
+        sendMVP();
+        streetObject_2.setTexture(street_texture);
+        streetObject_2.draw(shader);
+
+        //get time since game started
+        GLint64 timer;
+        glGetInteger64v(GL_TIMESTAMP, &timer);
+        timer = timer/1000000000.0;
+        //display time in window
+        std::string text = std::to_string(timer);
+        glColor3f(1, 1, 1);
+        drawText(text.data(), text.length(), 0, 0);
+        //printf("Seconds: %s\n", text.data());
+
         // Swap buffers
         glfwSwapBuffers(window);
         
@@ -319,10 +343,10 @@ int main(void)
         // z.b. Maus oder Tastatureingabe �berpr�fen, wenn ja rufe die funktion key_callback auf, sofern diese vorhanden(Ja), oder mouse_callback,... (checkt ob vorhanden, wenn ja wirds ausgef�hrt)
         glfwPollEvents();
     }
-    
+
     
     glDeleteProgram(programID);
-    
+
     // 5
     // Cleanup VBO and shader
     // n�tig am ende wenn das programm terminiert. Macht aber alternativ auch das bettriebssystem
@@ -331,7 +355,7 @@ int main(void)
     glDeleteBuffers(1, &normalbuffer);
     
     glDeleteBuffers(1, &uvbuffer);
-    glDeleteTextures(1, &texture);
+    glDeleteTextures(1, &monkey_texture);
     
     
     // Close OpenGL window and terminate GLFW
@@ -544,3 +568,26 @@ glm::mat4 drawCar(glm::mat4 model)
     return model;
 }
 
+void drawText(const char *text, int length, int x, int y) {
+
+    glMatrixMode(GL_PROJECTION);
+    double *matrix = new double[16];
+    glGetDoublev(GL_PROJECTION_MATRIX, matrix);
+    glLoadIdentity();
+    glOrtho(0, 800, 0, 600, -5, 5);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glPushMatrix();
+    glLoadIdentity();
+
+    glRasterPos2i(x, y);
+    for (int i = 0; i < length; i++) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10 , (int)text[i]);
+        //glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, text[i]);
+    }
+
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixd(matrix);
+    glMatrixMode(GL_MODELVIEW);
+}

@@ -1,0 +1,10 @@
+/opt/clion/clion-2019.1/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/zombie/CLionProjects/proof
+-- GLM_INCLUDE_DIR = /usr/include
+-- GLM included at /usr/include
+-- Found GLFW3 in /usr/include
+-- Found ASSIMP: /usr/lib/x86_64-linux-gnu/libassimp.so
+-- Found ASSIMP in /usr/include
+-- Found GLEW in /usr/include
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/zombie/CLionProjects/proof/cmake-build-debug

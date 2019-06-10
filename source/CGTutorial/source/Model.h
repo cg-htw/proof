@@ -43,7 +43,7 @@ public:
             this->meshes[i].Draw( shader );
         }
     }
-    
+
 private:
     /*  Model Data  */
     vector<Mesh> meshes;
