@@ -6,20 +6,28 @@
 #include <glm/gtc/type_ptr.hpp>
 using namespace glm;
 
-#include "Model.h"
+#include "Model.hpp"
 
-class StreetObject {
+class Object3D {
     public:
-        StreetObject(Model m): model(m) {
+        Object3D(Model m): model(m) {
             matrix = glm::mat4(1.0f);
         }
-        void setMatrix(glm::mat4 m) {
-            this->matrix = m;
-        }
+    
         glm::mat4 getMatrix() {
             return this->matrix;
         }
 
+        void translateTo(glm::vec3 translation){
+            matrix = glm::translate(matrix, translation);
+        }
+    
+        void rotateTo(glm::vec3 rotation){
+            matrix = glm::rotate(matrix, rotation[0], glm::vec3(1.0, 0.0, 0.0) );
+            matrix = glm::rotate(matrix, rotation[1], glm::vec3(0.0, 1.0, 0.0) );
+            matrix = glm::rotate(matrix, rotation[2], glm::vec3(0.0, 0.0, 1.0) );
+        }
+    
         void setTexture(GLuint textId) {
             this->model.setTexture(textId);
         }

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1836057122AFE5A400423251 /* text2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1836056F22AFE5A400423251 /* text2D.cpp */; };
+		18938D7A22AFBC680012FC3C /* Car.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18938D7822AFBC680012FC3C /* Car.cpp */; };
+		18938D7E22AFC2A40012FC3C /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18938D7C22AFC2A40012FC3C /* Model.cpp */; };
 		18D8A0BE229C63BC000B2709 /* libassimp.4.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D8A0BD229C63BB000B2709 /* libassimp.4.1.0.dylib */; };
 		18D8A0C0229C63CC000B2709 /* libsoil2-debug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D8A0BF229C63CC000B2709 /* libsoil2-debug.a */; };
 		B9F1A79E1CFED506001A5641 /* objects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B9F1A7951CFED506001A5641 /* objects.cpp */; };
@@ -37,11 +40,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1836056D22AFDEAB00423251 /* libglut.3.10.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglut.3.10.0.dylib; path = source/common/external/libs/libglut.3.10.0.dylib; sourceTree = "<group>"; };
+		1836056F22AFE5A400423251 /* text2D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = text2D.cpp; sourceTree = "<group>"; };
+		1836057022AFE5A400423251 /* text2D.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = text2D.hpp; sourceTree = "<group>"; };
+		18938D7822AFBC680012FC3C /* Car.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Car.cpp; sourceTree = "<group>"; };
+		18938D7922AFBC680012FC3C /* Car.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Car.hpp; sourceTree = "<group>"; };
+		18938D7B22AFBD1B0012FC3C /* Object3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Object3D.h; sourceTree = "<group>"; };
+		18938D7C22AFC2A40012FC3C /* Model.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Model.cpp; sourceTree = "<group>"; };
+		18938D7D22AFC2A40012FC3C /* Model.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Model.hpp; sourceTree = "<group>"; };
 		18D8A0BC229C62C3000B2709 /* external */ = {isa = PBXFileReference; lastKnownFileType = folder; name = external; path = source/common/external; sourceTree = "<group>"; };
 		18D8A0BD229C63BB000B2709 /* libassimp.4.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.4.1.0.dylib; path = source/common/external/libs/libassimp.4.1.0.dylib; sourceTree = "<group>"; };
 		18D8A0BF229C63CC000B2709 /* libsoil2-debug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsoil2-debug.a"; path = "source/common/external/libs/libsoil2-debug.a"; sourceTree = "<group>"; };
 		18D8A0C1229C64C4000B2709 /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
-		18D8A0C2229C64C4000B2709 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		18D8A0C4229C64C4000B2709 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		18D8A0C8229C64DB000B2709 /* container2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = container2.png; sourceTree = "<group>"; };
 		18D8A0C9229C64DB000B2709 /* container2_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = container2_specular.png; sourceTree = "<group>"; };
@@ -117,6 +127,7 @@
 		185840F3229C598300848119 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1836056D22AFDEAB00423251 /* libglut.3.10.0.dylib */,
 				18D8A0BF229C63CC000B2709 /* libsoil2-debug.a */,
 				18D8A0BD229C63BB000B2709 /* libassimp.4.1.0.dylib */,
 			);
@@ -222,9 +233,13 @@
 				B9F1A7951CFED506001A5641 /* objects.cpp */,
 				B9F1A7961CFED506001A5641 /* objects.hpp */,
 				18D8A0C1229C64C4000B2709 /* Mesh.h */,
+				18938D7C22AFC2A40012FC3C /* Model.cpp */,
+				18938D7D22AFC2A40012FC3C /* Model.hpp */,
 				18D8A0C4229C64C4000B2709 /* Camera.h */,
-				18D8A0C2229C64C4000B2709 /* Model.h */,
+				18938D7822AFBC680012FC3C /* Car.cpp */,
+				18938D7922AFBC680012FC3C /* Car.hpp */,
 				18D8A0EA229C64FC000B2709 /* Shader.h */,
+				18938D7B22AFBD1B0012FC3C /* Object3D.h */,
 				B9F1A7971CFED506001A5641 /* objloader.cpp */,
 				B9F1A7981CFED506001A5641 /* objloader.hpp */,
 				B9F1A7991CFED506001A5641 /* shader.cpp */,
@@ -232,6 +247,8 @@
 				B9F1A79B1CFED506001A5641 /* texture.cpp */,
 				B9F1A79C1CFED506001A5641 /* texture.hpp */,
 				18F4FBAB22A004D100033D13 /* Behaviour.hpp */,
+				1836056F22AFE5A400423251 /* text2D.cpp */,
+				1836057022AFE5A400423251 /* text2D.hpp */,
 			);
 			path = source;
 			sourceTree = "<group>";
@@ -302,11 +319,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9F1A7A01CFED506001A5641 /* shader.cpp in Sources */,
+				18938D7A22AFBC680012FC3C /* Car.cpp in Sources */,
 				E29C2ACA19FCA1C400A6FCD2 /* glew.c in Sources */,
+				18938D7E22AFC2A40012FC3C /* Model.cpp in Sources */,
 				B9F1A79E1CFED506001A5641 /* objects.cpp in Sources */,
 				B9F1A7A11CFED506001A5641 /* texture.cpp in Sources */,
 				C6B18AF01DB8EA340000F975 /* main.cpp in Sources */,
 				B9F1A79F1CFED506001A5641 /* objloader.cpp in Sources */,
+				1836057122AFE5A400423251 /* text2D.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

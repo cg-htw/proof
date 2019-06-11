@@ -1,58 +1,25 @@
-#pragma once
+#include "Model.hpp"
 
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <map>
-#include <vector>
-
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include "SOIL2/SOIL2.h"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
-#include "Mesh.h"
-
-using namespace std;
-
-GLint TextureFromFile( const char *path, string directory );
-
-class Model
-{
-public:
-    /*  Functions   */
-    // Constructor, expects a filepath to a 3D model.
-    Model( GLchar *path )
+Model::Model( GLchar *path )
     {
-        this->loadModel( path );
+        loadModel( path );
     }
     
-    void setTexture(GLuint textId) {
-        this->meshes[0].setTexture(textId);
+void Model::setTexture(GLuint textId) {
+        meshes[0].setTexture(textId);
     }
     
     // Draws the model, and thus all its meshes
-    void Draw( Shader shader )
+void Model::Draw( Shader shader )
     {
-        for ( GLuint i = 0; i < this->meshes.size( ); i++ )
+        for ( GLuint i = 0; i < meshes.size( ); i++ )
         {
-            this->meshes[i].Draw( shader );
+            meshes[i].Draw( shader );
         }
     }
 
-private:
-    /*  Model Data  */
-    vector<Mesh> meshes;
-    string directory;
-    vector<Texture> textures_loaded;	// Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-    
-    /*  Functions   */
     // Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-    void loadModel( string path )
+void Model::loadModel( string path )
     {
         // Read file via ASSIMP
         Assimp::Importer importer;
@@ -65,14 +32,14 @@ private:
             return;
         }
         // Retrieve the directory path of the filepath
-        this->directory = path.substr( 0, path.find_last_of( '/' ) );
+        directory = path.substr( 0, path.find_last_of( '/' ) );
         
         // Process ASSIMP's root node recursively
-        this->processNode( scene->mRootNode, scene );
+        processNode( scene->mRootNode, scene );
     }
     
     // Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-    void processNode( aiNode* node, const aiScene* scene )
+void Model::processNode( aiNode* node, const aiScene* scene )
     {
         // Process each mesh located at the current node
         for ( GLuint i = 0; i < node->mNumMeshes; i++ )
@@ -81,17 +48,17 @@ private:
             // The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
             
-            this->meshes.push_back( this->processMesh( mesh, scene ) );
+            meshes.push_back( processMesh( mesh, scene ) );
         }
         
         // After we've processed all of the meshes (if any) we then recursively process each of the children nodes
         for ( GLuint i = 0; i < node->mNumChildren; i++ )
         {
-            this->processNode( node->mChildren[i], scene );
+            processNode( node->mChildren[i], scene );
         }
     }
     
-    Mesh processMesh( aiMesh *mesh, const aiScene *scene )
+Mesh Model::processMesh( aiMesh *mesh, const aiScene *scene )
     {
         // Data to fill
         vector<Vertex> vertices;
@@ -157,11 +124,11 @@ private:
             // Normal: texture_normalN
             
             // 1. Diffuse maps
-            vector<Texture> diffuseMaps = this->loadMaterialTextures( material, aiTextureType_DIFFUSE, "texture_diffuse" );
+            vector<Texture> diffuseMaps = loadMaterialTextures( material, aiTextureType_DIFFUSE, "texture_diffuse" );
             textures.insert( textures.end( ), diffuseMaps.begin( ), diffuseMaps.end( ) );
             
             // 2. Specular maps
-            vector<Texture> specularMaps = this->loadMaterialTextures( material, aiTextureType_SPECULAR, "texture_specular" );
+            vector<Texture> specularMaps = loadMaterialTextures( material, aiTextureType_SPECULAR, "texture_specular" );
             textures.insert( textures.end( ), specularMaps.begin( ), specularMaps.end( ) );
         }
         
@@ -171,7 +138,7 @@ private:
     
     // Checks all material textures of a given type and loads the textures if they're not loaded yet.
     // The required info is returned as a Texture struct.
-    vector<Texture> loadMaterialTextures( aiMaterial *mat, aiTextureType type, string typeName )
+vector<Texture> Model::loadMaterialTextures( aiMaterial *mat, aiTextureType type, string typeName )
     {
         vector<Texture> textures;
         
@@ -197,18 +164,18 @@ private:
             if( !skip )
             {   // If texture hasn't been loaded already, load it
                 Texture texture;
-                texture.id = TextureFromFile( str.C_Str( ), this->directory );
+                texture.id = TextureFromFile( str.C_Str( ), directory );
                 texture.type = typeName;
                 texture.path = str;
                 textures.push_back( texture );
                 
-                this->textures_loaded.push_back( texture );  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+                textures_loaded.push_back( texture );  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
             }
         }
         
         return textures;
     }
-};
+
 
 
 GLint TextureFromFile( const char *path, string directory )
