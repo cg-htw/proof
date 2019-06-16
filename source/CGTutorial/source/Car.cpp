@@ -12,14 +12,15 @@ Car::Car(Model carModel, float maxVelocity): carModel(carModel), maxVelocity(max
 
     velocity = 0;
     minVelocity = -5.0f;
-    brakingForce = 1.0f;
+    brakingForce = 0.2f;
+    friction = 0.05f;
 
 
 }
 
 void Car::moveBy(glm::vec3 deltaTranslation){
     translation += deltaTranslation;
-    carMatrix = glm::translate(carMatrix, translation);
+    carMatrix = glm::translate(carMatrix, deltaTranslation);
 }
 
 void Car::moveTo(glm::vec3 translation){
@@ -33,7 +34,7 @@ void Car::accelerateBy(float acceleration){
         this->velocity = maxVelocity;
     if(this->velocity < minVelocity)
         this->velocity = minVelocity;
-}
+ }
 
 void Car::brake(){
     if (velocity > 0.0) {
@@ -42,6 +43,19 @@ void Car::brake(){
             velocity = 0.0;
     } else if (velocity < 0.0) {
         velocity += brakingForce;
+        if (velocity > 0.0)
+            velocity = 0.0;
+    }
+}
+
+void Car::brakeByFriction(){
+    printf("brake bz friction");
+    if (velocity > 0.0) {
+        velocity -= friction;
+        if (velocity < 0.0)
+            velocity = 0.0;
+    } else if (velocity < 0.0) {
+        velocity += friction;
         if (velocity > 0.0)
             velocity = 0.0;
     }
@@ -58,12 +72,21 @@ void Car::setBrakingForce(float brakingForce){
     this->brakingForce = brakingForce;
 }
 
+void Car::setFriction(float friction){
+    this->friction = friction;
+}
+
+void Car::turn(float angle){
+    this->rotation[2] += angle;
+    carMatrix = glm::rotate(carMatrix, angle, glm::vec3(0.0, 0.0, 1.0) );
+}
+
 
 void Car::rotateBy(glm::vec3 deltaRotation){
     this->rotation += deltaRotation;
-    carMatrix = glm::rotate(carMatrix, rotation[0], glm::vec3(1.0, 0.0, 0.0) );
-    carMatrix = glm::rotate(carMatrix, rotation[1], glm::vec3(0.0, 1.0, 0.0) );
-    carMatrix = glm::rotate(carMatrix, rotation[2], glm::vec3(0.0, 0.0, 1.0) );
+    carMatrix = glm::rotate(carMatrix, deltaRotation[0], glm::vec3(1.0, 0.0, 0.0) );
+    carMatrix = glm::rotate(carMatrix, deltaRotation[1], glm::vec3(0.0, 1.0, 0.0) );
+    carMatrix = glm::rotate(carMatrix, deltaRotation[2], glm::vec3(0.0, 0.0, 1.0) );
 }
 
 void Car::rotateTo(glm::vec3 rotation){
@@ -90,6 +113,8 @@ void Car::setTexture(GLuint textId) {
 
 void Car::draw(Shader shader){
 //    performTransformations();
+    moveBy(glm::vec3(0.0f, velocity, 0.0f)); // TODO: change code so that moveBy
+
     carModel.Draw(shader);
     
     // evt.update der Vektoren notwendig, aber eig nicht.

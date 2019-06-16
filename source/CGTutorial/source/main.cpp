@@ -39,6 +39,7 @@ using namespace glm;
 
 #include "text2D.hpp"
 
+
 // Properties
 const GLuint WIDTH = 1400, HEIGHT = 1400;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
@@ -50,33 +51,26 @@ glm::mat4 projection;
 glm::mat4 view;
 glm::mat4 model;
 GLuint programID;
+Shader *shader;
 
-// for key_callback
-float angleX = 0.0f;
-float angleY = 0.0f;
-float angleZ = 0.0f;
+Car *car1;
+#include "Input.hpp"
 
-float angleYBase = 0.0f;
-float angleZBaseSeg1 = 0.0f;
-float angleZSeg1Seg2 = 0.0f;
-float angleZSeg2Seg3 = 0.0f;
-
-float movement = 0.0f;
-float speed = 0.5f;
-float speedBackwards = 2.0f;
-float turn = 0; // gradmaß, Drehung
-std::vector<int> keys;
-
+Model *streetCurveA90Model;
+Model *streetCurveB90Model;
+Model *streetStraight;
+GLint street_texture;
+GLint grass_texture;
+std::vector<Object3D> streetObjects;
+Model *landscape;
 
 // Function prototypes
 void error_callback( int error, const char* description );
 void key_callback( GLFWwindow* window, int key, int scancode, int action, int mods );
 // void mouse_callback( GLFWwindow *window, double xPos, double yPos );
 void sendMVP();
-void zeichneKS();
-void zeichneSeg(float h);
-// void DoMovement( );
-glm::mat4 drawCar(glm::mat4 model);
+void buildLevel1();
+void drawLevel1();
 
 int main()
 {
@@ -121,7 +115,7 @@ int main()
         fprintf(stderr, "Failed to initialize GLEW\n");
         return -1;
     }
-
+    
     // define wich key_callback function is to be used for the passed window
     glfwSetKeyCallback(window, key_callback);
     
@@ -143,45 +137,23 @@ int main()
     glUseProgram(programID);
 
     // Setup and compile our shaders
-    Shader shader( "./source/res/shaders/modelLoading.vs", "./source/res/shaders/modelLoading.frag" );
+    shader = new Shader( "./source/res/shaders/modelLoading.vs", "./source/res/shaders/modelLoading.frag" );
     //shader.Use();
     
     // Load models
 
     Model carModel( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
-    Model streetCurveA90Model ( "resources/Street_and_landscape/StreetCurveA90.fbx" );
-    Model streetCurveB90Model ( "resources/Street_and_landscape/StreetCurveB90.fbx" );
-    Model streetStraight ( "resources/Street_and_landscape/StreetStraight.fbx" );
-    Model landscape ( "resources/Street_and_landscape/landscape.fbx" );
+    streetCurveA90Model = new Model( "resources/Street_and_landscape/StreetCurveA90.fbx" );
+    streetCurveB90Model = new Model( "resources/Street_and_landscape/StreetCurveB90.fbx" );
+    streetStraight = new Model( "resources/Street_and_landscape/StreetStraight.fbx" );
 
-    
-    // TODO auslagern in Methode Load-Level1
-    Object3D streetObject_1 (streetStraight);
-    
-    // A ist anschluss an gerade
-    Object3D streetObject_2 (streetCurveA90Model);
-    streetObject_2.translateTo(glm::vec3(5.0, 0.0, 0.0));
-    
-    // B ist anschluss an Kurve
-    Object3D streetObject_3 (streetCurveB90Model);
-    streetObject_3.translateTo(glm::vec3(10.0, 0.0, 5.0));
-    
-    Object3D streetObject_4 (streetStraight);
-    streetObject_4.translateTo(glm::vec3(0.0, 0.0, 10.0));
-
-    Object3D streetObject_5 (streetCurveA90Model);
-    streetObject_5.rotateTo(glm::vec3(0.0, glm::radians(-180.0), 0.0));
-    streetObject_5.translateTo(glm::vec3(5.0, 0.0, -10.0));
-    
-    Object3D streetObject_6 (streetCurveB90Model);
-    streetObject_6.rotateTo(glm::vec3(0.0, glm::radians(-180.0), 0.0));
-    streetObject_6.translateTo(glm::vec3(10.0, 0.0, -5.0));
+    buildLevel1();
     
     
-    Car car1(carModel, 10.0f);
-    car1.scale(1.0/7.5);
-    car1.rotateBy(glm::vec3(glm::radians(-90.0), 0.0, glm::radians(90.0)));
-    car1.moveBy(glm::vec3(-3.0, 2.0, 6.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
+    car1 = new Car(carModel, 10.0f);
+    car1->scale(1.0/7.5);
+    car1->rotateBy(glm::vec3(glm::radians(-90.0), 0.0, glm::radians(90.0)));
+    car1->moveBy(glm::vec3(-3.0, 2.0, 6.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
     
     
     // read data to be passed to graphics card later
@@ -226,9 +198,8 @@ int main()
 //    GLuint monkey_texture = loadBMP_custom("resources/red.bmp"); // monkey_texture eine zahl,
      GLuint monkey_texture = loadBMP_custom("resources/mandrill.bmp"); // monkey_texture eine zahl,
 
-    
-    GLint street_texture = TextureFromFile("rua.jpg", "resources/Street_and_landscape");
-    GLint grass_texture = TextureFromFile("grass.jpg", "resources/Street_and_landscape");
+    street_texture = TextureFromFile("rua.jpg", "resources/Street_and_landscape");
+    grass_texture = TextureFromFile("grass.jpg", "resources/Street_and_landscape");
     
     initText2D( "resources/Text2D/Holstein.DDS" );
     
@@ -256,18 +227,12 @@ int main()
                            glm::vec3(0,0,0),  // and looks at the origin
                            glm::vec3(0,1,0)); // Head is up (set to 0,-1,0 to look upside-down
 
-
-        // Y-Achse nach oben, X-Achse in den Bildschirm, Z-Achse nach rechts
         view = glm::rotate(view, -1.5708f, glm::vec3( 0.0, 1.0, 0.0));
         //
         // Model matrix : an identity matrix (model will be at the origin)
-        // assign the result of glm::mat4(1.0f), which is the identity matrix (Einheitsmatrix) to the variable model.
         model = glm::mat4(1.0f);
         
-        // glm:: not nesecary because the glm namespace is used. (... but shows where the fct comers from)
-        model = glm::rotate(model, angleX, glm::vec3( 1.0, 0.0, 0.0));
-        model = glm::rotate(model, angleY, glm::vec3( 0.0, 1.0, 0.0));
-        model = glm::rotate(model, angleZ, glm::vec3( 0.0, 0.0, 1.0));
+
 
         glm::mat4 save = model;
         model = glm::translate(model, glm::vec3(1.5, 0.0, 0.0));
@@ -289,101 +254,26 @@ int main()
          glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
         
         sendMVP();
-        
-        // 4
-        // Daten nehmen und zeichnen
-        glBindVertexArray(vertexArrayIDTeapot);
-        glDrawArrays(GL_TRIANGLES, 0, (float) vertices.size());
-        
-        // drawWireCube();
-        
-        
-        // Kugel zeichnen
-        model = save; // lade die gespeicherte matrix, zur rotation u
-        // Model = glm::scale(Model, glm::vec3(0.5, 0.5, 0.5));
-        // sendMVP();
-        // drawSphere(10, 10);
-        
-        zeichneKS();
-        
-        model = glm::rotate(model, angleYBase, glm::vec3( 0.0, 1.0, 0.0));
-        
-        model = glm::rotate(model, angleZBaseSeg1, glm::vec3( 0.0, 0.0, 1.0));
-        zeichneSeg(0.5);
-        model = glm::translate(model, glm::vec3(0.0, 0.5, 0.0));
-        model = glm::rotate(model, angleZSeg1Seg2, glm::vec3( 0.0, 0.0, 1.0));
-        zeichneSeg(0.4);
-        model = glm::translate(model, glm::vec3(0.0, 0.4, 0.0));
-        model = glm::rotate(model, angleZSeg2Seg3, glm::vec3( 0.0, 0.0, 1.0));
-        zeichneSeg(0.3);
+    
 
         // Licht am roboterarm
         //glm::vec4 lpw = model * glm::vec4(0.0, 0.3, 0.0, 1.0); // light position world
         //glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lpw.x / lpw.w, lpw.y / lpw.w, lpw.z / lpw.w); // lpw.w = normalisierungszahl, ist aber bei uns sowieso 1
         
         
-        
-        // draw car
-
-        
         model = save;
-        
-
-//        model = glm::translate(model, glm::vec3(-1.5, 0.0, 0.0));
-//        double scaleFactor = 1.0 / 2.0;
-//        model = glm::scale(model, glm::vec3(scaleFactor, scaleFactor, scaleFactor));
-//
-//
-//
-//        model = glm::rotate(model, -95.0f, glm::vec3( 1.0, 0.0, 0.0));
         // Bind our monkey_texture in Texture Unit 0
         //glActiveTexture(GL_TEXTURE0); // da multiple texturing m�glich ist notwendig anzugeben welche grad die gewollte ist f�r dieses Texture Unit.
         //glBindTexture(GL_TEXTURE_2D, monkey_texture);
 
-        model = car1.getModel();
-//        model = glm::translate(model, glm::vec3(0.0, 5.0, 0.0));
+        model = car1->getModel();
 
         sendMVP();
         //drawCube();
-        car1.draw( shader );
+        car1->draw( *shader );
 
-        
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0, -0.01, 0.0));
-        sendMVP();
-        landscape.setTexture(grass_texture);
-        landscape.Draw(shader);
-        
-        //Straße
-        model = streetObject_1.getMatrix();
-        sendMVP();
-        streetObject_1.setTexture(street_texture);
-        streetObject_1.draw(shader);
-
-        model = streetObject_2.getMatrix();
-        sendMVP();
-        streetObject_2.setTexture(street_texture);
-        streetObject_2.draw(shader);
-
-        model = streetObject_3.getMatrix();
-        sendMVP();
-        streetObject_3.setTexture(street_texture);
-        streetObject_3.draw(shader);
-        
-        model = streetObject_4.getMatrix();
-        sendMVP();
-        streetObject_4.setTexture(street_texture);
-        streetObject_4.draw(shader);
-        
-        model = streetObject_5.getMatrix();
-        sendMVP();
-        streetObject_5.setTexture(street_texture);
-        streetObject_5.draw(shader);
-        
-        model = streetObject_6.getMatrix();
-        sendMVP();
-        streetObject_6.setTexture(street_texture);
-        streetObject_6.draw(shader);
+        // TODO: wahrscheinlich schlauer ausserhalb der schleife, da nur einmal yu yeichnen
+        drawLevel1();
         
         //get time since game started
         GLint64 timer;
@@ -426,139 +316,13 @@ int main()
     return 0;
 }
 
+
 /*
  Genau diese Parameter f�r glfwSetErrorCallback(error_callback) n�tig
  */
 void error_callback(int error, const char* description)
 {
     fputs(description, stderr);
-}
-
-
-// TODO: Car Klasse verwenden
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    switch (action) {
-        case GLFW_PRESS:
-            keys.push_back(key);
-            break;
-            
-        case GLFW_RELEASE:
-            // if (std::find(keys.begin(), keys.end(), key) != keys.end()){
-            keys.erase(std::remove(keys.begin(), keys.end(), key), keys.end());
-            // }
-            break;
-    }
-    
-    // single keys
-    if(!(std::find(keys.begin(), keys.end(), GLFW_KEY_1) != keys.end())
-       && !(std::find(keys.begin(), keys.end(), GLFW_KEY_2) != keys.end())
-       && !(std::find(keys.begin(), keys.end(), GLFW_KEY_3) != keys.end())
-       && !(std::find(keys.begin(), keys.end(), GLFW_KEY_LEFT_SHIFT) != keys.end())
-       && !(std::find(keys.begin(), keys.end(), GLFW_KEY_B) != keys.end())
-       ){
-        switch (key)
-        {
-            case GLFW_KEY_ESCAPE:
-                glfwSetWindowShouldClose(window, GL_TRUE);
-                break;
-                
-            case GLFW_KEY_UP:
-                angleX = angleX + 0.1f;
-                
-                break;
-                
-            case GLFW_KEY_DOWN:
-                angleX = angleX - 0.1f;
-                break;
-                
-            case GLFW_KEY_LEFT:
-                angleY = angleY - 0.1f;
-                break;
-                
-            case GLFW_KEY_RIGHT:
-                angleY = angleY + 0.1f;
-                break;
-                
-            case GLFW_KEY_Z:
-                angleZ = angleZ + 0.1f;
-                break;
-                
-              
-            // TODO: Gleichzeitig w/s + a/d/u/j
-                
-                // -1 = backwards, 0 = left, 1 = forward, 2 = right, 3 = -1
-            case GLFW_KEY_W:
-                movement = movement + speed;
-                break;
-                
-            case GLFW_KEY_S:
-                movement = movement - speedBackwards;
-                break;
-                
-            case GLFW_KEY_A:
-                turn = turn - 0.1f;
-                break;
-                
-            case GLFW_KEY_D:
-                turn = turn + 0.1f;
-                break;
-                
-            case GLFW_KEY_U:
-                if ( speed <= 3 ) {
-                    speed = speed + 0.5f;
-                }
-                break;
-                
-            case GLFW_KEY_J:
-                if ( speed >= 0.5 ) {
-                    speed = speed - 0.5f;
-                }
-                break;
-                
-            default:
-                break;
-        }
-    }
-    
-    // key combinations
-    
-    if (std::find(keys.begin(), keys.end(), GLFW_KEY_LEFT_SHIFT) != keys.end()) {
-        if(std::find(keys.begin(), keys.end(), GLFW_KEY_Z) != keys.end()){
-            angleZ = angleZ - 0.1f;
-        }
-    }
-    
-    if (std::find(keys.begin(), keys.end(), GLFW_KEY_1) != keys.end()) {
-        if(std::find(keys.begin(), keys.end(), GLFW_KEY_UP) != keys.end()){
-            angleZBaseSeg1 = angleZBaseSeg1 + 0.1f;
-        } else if (std::find(keys.begin(), keys.end(), GLFW_KEY_DOWN) != keys.end()){
-            angleZBaseSeg1 = angleZBaseSeg1 - 0.1f;
-        }
-    }
-    if (std::find(keys.begin(), keys.end(), GLFW_KEY_2) != keys.end()) {
-        if(std::find(keys.begin(), keys.end(), GLFW_KEY_UP) != keys.end()){
-            angleZSeg1Seg2 = angleZSeg1Seg2 + 0.1f;
-        } else if (std::find(keys.begin(), keys.end(), GLFW_KEY_DOWN) != keys.end()){
-            angleZSeg1Seg2 = angleZSeg1Seg2 - 0.1f;
-        }
-    }
-    if (std::find(keys.begin(), keys.end(), GLFW_KEY_3) != keys.end()) {
-        if(std::find(keys.begin(), keys.end(), GLFW_KEY_UP) != keys.end()){
-            angleZSeg2Seg3 = angleZSeg2Seg3 + 0.1f;
-        } else if (std::find(keys.begin(), keys.end(), GLFW_KEY_DOWN) != keys.end()){
-            angleZSeg2Seg3 = angleZSeg2Seg3 - 0.1f;
-        }
-    }
-    
-    if (std::find(keys.begin(), keys.end(), GLFW_KEY_B) != keys.end()) {
-        if(std::find(keys.begin(), keys.end(), GLFW_KEY_LEFT) != keys.end()){
-            angleYBase = angleYBase + 0.1f;
-        } else if (std::find(keys.begin(), keys.end(), GLFW_KEY_RIGHT) != keys.end()){
-            angleYBase = angleYBase - 0.1f;
-        }
-    }
-    
 }
 
 // Berechnungen von CPU an GPU schicken
@@ -573,64 +337,6 @@ void sendMVP()
     glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(programID, "P"), 1, GL_FALSE, &projection[0][0]);
 }
-
-void zeichneKS()
-{
-    glm::mat4 save = model;
-    model = glm::scale(save, glm::vec3(5.0,0.01,0.01));
-    sendMVP();
-    drawCube();
-    model=save;
-    
-    save = model;
-    model = glm::scale(save, glm::vec3(0.01, 5.0, 0.01));
-    sendMVP();
-    drawCube();
-    model=save;
-    
-    save = model;
-    model = glm::scale(save, glm::vec3(0.01, 0.01, 5.0));
-    sendMVP();
-    drawCube();
-    model=save;
-}
-
-void zeichneSeg(float h)
-{
-    glm::mat4 Save = model;
-    model = glm::translate(model, glm::vec3(0.0, h / 2, 0.0)); // wie in schwarzer zeichnung (leserichtung aufw�rts)
-    model = glm::scale(model, glm::vec3(h / 6.0, h / 2, h / 6.0 ));
-    //Model = glm::translate(Model, glm::vec3(0.0, 1.0, 0.0)); // alternativl�sung, wie in blauer zeichnung (leserichtung aufw�rts)
-    
-    sendMVP();
-    // radius = 1; bezugskoordinatensystem: mittelpunkt des koordinatensystems im mittelpunkt
-    drawSphere(10.0, 10.0);
-    model=Save;
-}
-
-//glm::mat4 drawCar(glm::mat4 model)
-//{
-////    zeichneKS();
-//
-//
-//    model = glm::translate(model, glm::vec3(-1.5, 0.0, 0.0));
-//    double scaleFactor = 1.0 / 10.0;
-//    model = glm::scale(model, glm::vec3(scaleFactor, scaleFactor, scaleFactor));
-//
-//    // initial rotation
-//    model = glm::rotate(model, -95.0f, glm::vec3( 1.0, 0.0, 0.0));
-//
-//
-//    model = glm::translate(model, glm::vec3(0.0, -movement, 0.0));
-//    model = glm::rotate(model, turn, glm::vec3( 0.0, 0.0, 1.0));
-//
-//
-//    // Problem: nach translate dreht sich das auto bei rotate immmernoch um den ursprünglichen punkt (anstatt um den mittelpunkt des autos)
-//    // daher müssen wir im world space translaten anstatt im object space, da sonst
-//
-//    // wir brauchebn die einzelnen transformationsmatrizen (rotationsmatrix, translationsmatrix), diese dann mtieinander multiplizieren und auf model anwenden
-//    return model;
-//}
 
 // TODO: Eine klasse car machen. Die alle Methoden hat die ich zu kontrolle des cars benötige.
 /*
@@ -648,3 +354,73 @@ void zeichneSeg(float h)
  rot ist ein quaternion, das umrechnen in euler winkel mit glm::degrees(glm::eulerAmgles(rot))
  
 */
+
+
+void buildLevel1(){
+    landscape = new Model( "resources/Street_and_landscape/landscape.fbx" );
+    
+    // TODO auslagern in Methode Load-Level1
+    Object3D streetObjectStraight(*streetStraight);
+    streetObjects.push_back(streetObjectStraight);
+    
+    // A ist anschluss an gerade
+    Object3D streetObjectCurveA90(*streetCurveA90Model);
+    streetObjects.push_back(streetObjectCurveA90);
+    streetObjects[1].translateTo(glm::vec3(5.0, 0.0, 0.0));
+    
+    // B ist anschluss an Kurve
+    Object3D streetObjectCurveB90(*streetCurveB90Model);
+    streetObjects.push_back(streetObjectCurveB90);
+    streetObjects[2].translateTo(glm::vec3(10.0, 0.0, 5.0));
+    
+    streetObjects.push_back(streetObjectStraight);
+    streetObjects[3].translateTo(glm::vec3(0.0, 0.0, 10.0));
+    
+    streetObjects.push_back(streetObjectCurveA90);
+    streetObjects[4].rotateTo(glm::vec3(0.0, glm::radians(-180.0), 0.0));
+    streetObjects[4].translateTo(glm::vec3(5.0, 0.0, -10.0));
+    
+    streetObjects.push_back(streetObjectCurveB90);
+    streetObjects[5].rotateTo(glm::vec3(0.0, glm::radians(-180.0), 0.0));
+    streetObjects[5].translateTo(glm::vec3(10.0, 0.0, -5.0));
+}
+
+
+void drawLevel1(){
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.0, -0.01, 0.0));
+    sendMVP();
+    landscape->setTexture(grass_texture);
+    landscape->Draw(*shader);
+    
+    //Straße
+    model = streetObjects[0].getMatrix();
+    sendMVP();
+    streetObjects[0].setTexture(street_texture);
+    streetObjects[0].draw(*shader);
+    
+    model = streetObjects[1].getMatrix();
+    sendMVP();
+    streetObjects[1].setTexture(street_texture);
+    streetObjects[1].draw(*shader);
+    
+    model = streetObjects[2].getMatrix();
+    sendMVP();
+    streetObjects[2].setTexture(street_texture);
+    streetObjects[2].draw(*shader);
+    
+    model = streetObjects[3].getMatrix();
+    sendMVP();
+    streetObjects[3].setTexture(street_texture);
+    streetObjects[3].draw(*shader);
+    
+    model = streetObjects[4].getMatrix();
+    sendMVP();
+    streetObjects[4].setTexture(street_texture);
+    streetObjects[4].draw(*shader);
+    
+    model = streetObjects[5].getMatrix();
+    sendMVP();
+    streetObjects[5].setTexture(street_texture);
+    streetObjects[5].draw(*shader);
+}

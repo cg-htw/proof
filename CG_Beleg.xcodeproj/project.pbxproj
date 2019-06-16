@@ -48,6 +48,7 @@
 		18938D7B22AFBD1B0012FC3C /* Object3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Object3D.h; sourceTree = "<group>"; };
 		18938D7C22AFC2A40012FC3C /* Model.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Model.cpp; sourceTree = "<group>"; };
 		18938D7D22AFC2A40012FC3C /* Model.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Model.hpp; sourceTree = "<group>"; };
+		18B46BC422B69DDC000D3444 /* Input.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Input.hpp; sourceTree = "<group>"; };
 		18D8A0BC229C62C3000B2709 /* external */ = {isa = PBXFileReference; lastKnownFileType = folder; name = external; path = source/common/external; sourceTree = "<group>"; };
 		18D8A0BD229C63BB000B2709 /* libassimp.4.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.4.1.0.dylib; path = source/common/external/libs/libassimp.4.1.0.dylib; sourceTree = "<group>"; };
 		18D8A0BF229C63CC000B2709 /* libsoil2-debug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsoil2-debug.a"; path = "source/common/external/libs/libsoil2-debug.a"; sourceTree = "<group>"; };
@@ -249,6 +250,7 @@
 				18F4FBAB22A004D100033D13 /* Behaviour.hpp */,
 				1836056F22AFE5A400423251 /* text2D.cpp */,
 				1836057022AFE5A400423251 /* text2D.hpp */,
+				18B46BC422B69DDC000D3444 /* Input.hpp */,
 			);
 			path = source;
 			sourceTree = "<group>";

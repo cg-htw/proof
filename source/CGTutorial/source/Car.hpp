@@ -39,6 +39,7 @@ class Car
     float maxVelocity;
     float minVelocity;
     float brakingForce;
+    float friction;
     
     
 public:
@@ -52,12 +53,14 @@ public:
     
     void accelerateBy(float acceleration); // called when w/s is pressed. increases velocity until max/min is reached
     void brake();
+    void brakeByFriction();
     void setMaxVelocity(float maxVelocity);
     void setMinVelocity(float maxVelocity);
     void setBrakingForce(float brakingForce);
-    
-    void rotateBy(glm::vec3 deltaRotation);
-    void rotateTo(glm::vec3 rotation);
+    void setFriction(float friction);
+    void turn(float angle);
+    void rotateBy(glm::vec3 deltaRotation); // TODO> delete
+    void rotateTo(glm::vec3 rotation); // TODO> delete
    
     void scale(float scaleFactor);
     
