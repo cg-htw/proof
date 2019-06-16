@@ -22,6 +22,10 @@
 
 #include "Model.hpp"
 
+struct historyEntry {
+    double time;
+    glm::mat4 carMatrix;
+};
 
 class Car
 {
@@ -38,9 +42,18 @@ class Car
     float velocity;
     float maxVelocity;
     float minVelocity;
+    float positiveAcceleration;
+    float negativeAcceleration;
+    float turnAngle;
+    float pendingTurn;
     float brakingForce;
     float friction;
     
+    double lastTime;
+    double deltaTime;
+    double currentTime;
+    
+    std::vector<historyEntry> history;
     
 public:
     
@@ -49,24 +62,28 @@ public:
     // evt. weiterer Konstruktor, bei dem man auch rotation und position übergeben kann, mit denen dann moveTo und rotateTo aufgerufen werden
     
     void moveBy(glm::vec3 deltaTranslation);
-    void moveTo(glm::vec3 translation);
+//    void moveTo(glm::vec3 translation);
     
-    void accelerateBy(float acceleration); // called when w/s is pressed. increases velocity until max/min is reached
+    void accelerate(bool forward); // called when w/s is pressed. increases velocity until max/min is reached
     void brake();
     void brakeByFriction();
     void setMaxVelocity(float maxVelocity);
     void setMinVelocity(float maxVelocity);
+    void setPositiveAcceleration(float positiveAcceleration);
+    void setNegativeAcceleration(float negativeAcceleration);
+    void setTurnAngle(float turnAngle);
     void setBrakingForce(float brakingForce);
     void setFriction(float friction);
-    void turn(float angle);
+    void turn(bool right);
     void rotateBy(glm::vec3 deltaRotation); // TODO> delete
-    void rotateTo(glm::vec3 rotation); // TODO> delete
+//    void rotateTo(glm::vec3 rotation); // TODO> delete
    
     void scale(float scaleFactor);
     
     glm::mat4 getModel();
     void setTexture(GLuint textId);
     
+    void performTransformations();
     void draw(Shader shader);
      // destructor probably not needed
 //    ~Car();

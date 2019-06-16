@@ -16,6 +16,8 @@
 #include "Car.hpp"
 
 std::vector<int> keys;
+
+
 void key_callback( GLFWwindow* window, int key, int scancode, int action, int mods ){
     switch (action) {
         case GLFW_PRESS:
@@ -43,19 +45,19 @@ void key_callback( GLFWwindow* window, int key, int scancode, int action, int mo
                 break;
                 
             case GLFW_KEY_UP:
-                car1->accelerateBy(-0.1f); // TODO: change code so that a positive value can be used here
+                car1->accelerate(true);
                 break;
                 
             case GLFW_KEY_DOWN:
-                car1->accelerateBy(0.1f);
+                car1->accelerate(false);
                 break;
                 
             case GLFW_KEY_LEFT:
-                car1->turn(0.1f);
+                car1->turn(false);
                 break;
                 
             case GLFW_KEY_RIGHT:
-                car1->turn(-0.1f);
+                car1->turn(true);
                 break;
                 
             case GLFW_KEY_SPACE:

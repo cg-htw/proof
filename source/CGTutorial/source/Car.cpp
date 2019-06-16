@@ -11,25 +11,57 @@ Car::Car(Model carModel, float maxVelocity): carModel(carModel), maxVelocity(max
     scaleFactor = 1.0f;
 
     velocity = 0;
-    minVelocity = -5.0f;
+    minVelocity = -500.0f;
+    positiveAcceleration = 5.0f;
+    negativeAcceleration = -2.0f;
+    turnAngle = 4.0f;
     brakingForce = 0.2f;
     friction = 0.05f;
-
-
 }
+
+glm::mat4 Car::getModel(){
+    return carMatrix;
+}
+
+void Car::setMaxVelocity(float maxVelocity){
+    this->maxVelocity = maxVelocity;
+}
+void Car::setMinVelocity(float minVelocity){
+    this->minVelocity = minVelocity;
+}
+
+void Car::setPositiveAcceleration(float positiveAcceleration){
+    this->positiveAcceleration = positiveAcceleration;
+}
+void Car::setNegativeAcceleration(float negativeAcceleration){
+    this->negativeAcceleration = negativeAcceleration;
+}
+
+void Car::setTurnAngle(float turnAngle){
+    this->turnAngle = turnAngle;
+}
+
+void Car::setBrakingForce(float brakingForce){
+    this->brakingForce = brakingForce;
+}
+
+void Car::setFriction(float friction){
+    this->friction = friction;
+}
+
 
 void Car::moveBy(glm::vec3 deltaTranslation){
     translation += deltaTranslation;
     carMatrix = glm::translate(carMatrix, deltaTranslation);
 }
 
-void Car::moveTo(glm::vec3 translation){
-    this->translation = translation;
-    carMatrix = glm::translate(carMatrix, translation);
-}
+//void Car::moveTo(glm::vec3 translation){
+//    this->translation = translation;
+//    carMatrix = glm::translate(carMatrix, translation);
+//}
 
-void Car::accelerateBy(float acceleration){
-    velocity += acceleration;
+void Car::accelerate(bool forward){
+    velocity -= forward? positiveAcceleration : negativeAcceleration; // TODO> herausfinden warum hier substraktion notwenidg ist und entsprechend aendern
     if(this->velocity > maxVelocity)
         this->velocity = maxVelocity;
     if(this->velocity < minVelocity)
@@ -61,26 +93,10 @@ void Car::brakeByFriction(){
     }
 }
 
-void Car::setMaxVelocity(float maxVelocity){
-    this->maxVelocity = maxVelocity;
+void Car::turn(bool right){
+    pendingTurn -= right? turnAngle : -turnAngle;
+    this->rotation[2] -= pendingTurn;
 }
-void Car::setMinVelocity(float minVelocity){
-    this->minVelocity = minVelocity;
-}
-
-void Car::setBrakingForce(float brakingForce){
-    this->brakingForce = brakingForce;
-}
-
-void Car::setFriction(float friction){
-    this->friction = friction;
-}
-
-void Car::turn(float angle){
-    this->rotation[2] += angle;
-    carMatrix = glm::rotate(carMatrix, angle, glm::vec3(0.0, 0.0, 1.0) );
-}
-
 
 void Car::rotateBy(glm::vec3 deltaRotation){
     this->rotation += deltaRotation;
@@ -89,12 +105,12 @@ void Car::rotateBy(glm::vec3 deltaRotation){
     carMatrix = glm::rotate(carMatrix, deltaRotation[2], glm::vec3(0.0, 0.0, 1.0) );
 }
 
-void Car::rotateTo(glm::vec3 rotation){
-    this->rotation = rotation;
-    carMatrix = glm::rotate(carMatrix, rotation[0], glm::vec3(1.0, 0.0, 0.0) );
-    carMatrix = glm::rotate(carMatrix, rotation[1], glm::vec3(0.0, 1.0, 0.0) );
-    carMatrix = glm::rotate(carMatrix, rotation[2], glm::vec3(0.0, 0.0, 1.0) );
-}
+//void Car::rotateTo(glm::vec3 rotation){
+//    this->rotation = rotation;
+//    carMatrix = glm::rotate(carMatrix, rotation[0], glm::vec3(1.0, 0.0, 0.0) );
+//    carMatrix = glm::rotate(carMatrix, rotation[1], glm::vec3(0.0, 1.0, 0.0) );
+//    carMatrix = glm::rotate(carMatrix, rotation[2], glm::vec3(0.0, 0.0, 1.0) );
+//}
 
 
 void Car::scale(float scaleFactor){
@@ -103,17 +119,26 @@ void Car::scale(float scaleFactor){
 
 }
 
-glm::mat4 Car::getModel(){
-    return carMatrix;
-}
-
 void Car::setTexture(GLuint textId) {
     carModel.setTexture(textId);
 }
 
+void Car::performTransformations(){
+    currentTime = glfwGetTime();
+    deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+    
+    rotateBy(glm::vec3(0.0f, 0.0f, pendingTurn * (float) deltaTime));
+//    carMatrix = glm::rotate(carMatrix, pendingTurn * (float) deltaTime, glm::vec3(0.0, 0.0, 1.0) );
+    pendingTurn = 0.0f;
+
+    moveBy(glm::vec3(0.0f, velocity * deltaTime, 0.0f)); // TODO: change code so that moveBy
+
+}
+
 void Car::draw(Shader shader){
-//    performTransformations();
-    moveBy(glm::vec3(0.0f, velocity, 0.0f)); // TODO: change code so that moveBy
+    performTransformations();
+    history.push_back({currentTime, carMatrix});
 
     carModel.Draw(shader);
     
