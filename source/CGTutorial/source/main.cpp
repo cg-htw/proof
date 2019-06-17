@@ -29,6 +29,7 @@ using namespace glm;
 
 // fromn OpenGL Tutorial
 #include "shader.hpp"
+#include "Shader.h"
 
 // Wuerfel und Kugel
 #include "objects.hpp"
@@ -108,13 +109,15 @@ int main()
     glfwMakeContextCurrent(window);
     
     // Initialize GLEW (to acess OpenGL-API > 1.1)
-    glewExperimental = true; // Needed for core profile
+    glewExperimental = GL_TRUE; // Needed for core profile
     
     if (glewInit() != GLEW_OK)
     {
         fprintf(stderr, "Failed to initialize GLEW\n");
         return -1;
     }
+    
+    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     
     // define wich key_callback function is to be used for the passed window
     glfwSetKeyCallback(window, key_callback);
@@ -140,12 +143,80 @@ int main()
     shader = new Shader( "./source/res/shaders/modelLoading.vs", "./source/res/shaders/modelLoading.frag" );
     //shader.Use();
     
+    Shader skyboxShader( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/source/res/shaders/skybox.vs", "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/source/res/shaders/skybox.frag" );
+    
     // Load models
 
     Model carModel( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
     streetCurveA90Model = new Model( "resources/Street_and_landscape/StreetCurveA90.fbx" );
     streetCurveB90Model = new Model( "resources/Street_and_landscape/StreetCurveB90.fbx" );
     streetStraight = new Model( "resources/Street_and_landscape/StreetStraight.fbx" );
+    
+    GLfloat skyboxVertices[] = {
+        // Positions
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+        
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+        
+        -1.0f,  1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+        
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f
+    };
+    
+    // Setup skybox VAO
+    GLuint skyboxVAO, skyboxVBO;
+    glGenVertexArrays( 1, &skyboxVAO );
+    glGenBuffers( 1, &skyboxVBO );
+    glBindVertexArray( skyboxVAO );
+    glBindBuffer( GL_ARRAY_BUFFER, skyboxVBO );
+    glBufferData( GL_ARRAY_BUFFER, sizeof( skyboxVertices ), &skyboxVertices, GL_STATIC_DRAW );
+    glEnableVertexAttribArray( 0 );
+    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof( GLfloat ), ( GLvoid * ) 0 );
+    glBindVertexArray(0);
+    
+    // Cubemap (Skybox)
+    vector<const GLchar*> faces;
+    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_rt.jpg" );
+    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_lf.jpg" );
+    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_up.jpg" );
+    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_dn.jpg" );
+    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_bk.jpg" );
+    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_ft.jpg" );
+    GLuint cubemapTexture = LoadCubemap(faces);
 
     buildLevel1();
     
@@ -216,6 +287,7 @@ int main()
     // Eventloop
     while (!glfwWindowShouldClose(window))
     {
+        glUseProgram(programID);
         // Clear the screen (depth of each frame, color)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
@@ -224,7 +296,7 @@ int main()
 
         // Camera matrix
         view = glm::lookAt(glm::vec3(0,20,-15), // Camera is at (0,2,-5), in World Space
-                           glm::vec3(0,0,0),  // and looks at the origin
+                           glm::vec3(0,10,0),  // and looks at the origin
                            glm::vec3(0,1,0)); // Head is up (set to 0,-1,0 to look upside-down
 
         view = glm::rotate(view, -1.5708f, glm::vec3( 0.0, 1.0, 0.0));
@@ -286,6 +358,21 @@ int main()
 
         // TODO: make it work
         //printText2D(text.data(), 10, 500, 60);
+        
+        // Draw skybox as last
+        glDepthFunc( GL_LEQUAL );  // Change depth function so depth test passes when values are equal to depth buffer's content
+        skyboxShader.Use( );
+        view = glm::mat4(glm::mat3(0.0f));    // Remove any translation component of the view matrix
+        
+        glUniformMatrix4fv( glGetUniformLocation( skyboxShader.Program, "view" ), 1, GL_FALSE, glm::value_ptr( view ) );
+        glUniformMatrix4fv( glGetUniformLocation( skyboxShader.Program, "projection" ), 1, GL_FALSE, glm::value_ptr( projection ) );
+        
+        // skybox cube
+        glBindVertexArray( skyboxVAO );
+        glBindTexture( GL_TEXTURE_CUBE_MAP, cubemapTexture );
+        glDrawArrays( GL_TRIANGLES, 0, 36 );
+        glBindVertexArray( 0 );
+        glDepthFunc( GL_LESS ); // Set depth function back to default
 
         
         // Swap buffers
