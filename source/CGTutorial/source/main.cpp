@@ -74,7 +74,7 @@ void drawLevel1();
 
 int main()
 {
-	
+    
     // Initialise GLFW
     if (!glfwInit())
     {
@@ -296,6 +296,9 @@ int main()
         glfwPollEvents();
     }
 
+    car1->saveHistoryToFile("lastRide.txt");
+    car1->loadHistoryFromFile("lastRide.txt");
+    
     
     glDeleteProgram(programID);
 

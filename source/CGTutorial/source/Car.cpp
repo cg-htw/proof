@@ -146,3 +146,72 @@ void Car::draw(Shader shader){
     // TODO: carModel.Draw(shader);  // wahrscheinlich sinnvoll ein Attribut für den Pointer auf den Shader anzulegen.
 }
 
+// TODO: Auslagern
+// TODO: nicht jeden frame speichern
+void Car::saveHistoryToFile(const std::string& file){
+    ofstream fOut (file); // equivalent to: ofstream myfile; myfile.open ("examplee.txt");
+    if (fOut.is_open()) {
+        /* ok, proceed with output */
+        // printf("file is open\n");
+        
+        for(int i = 0; i < history.size(); i++){
+            fOut << history.at(i).time;
+            fOut << " : ";
+            std::string matrix = glm::to_string(history.at(i).carMatrix).erase(0, 6);
+            fOut << matrix << std::endl;
+            fOut << "\n";
+        }
+        fOut.close();
+    } else cout << "Unable to open file";
+}
+
+// TODO: Auslagern, entweder in fileIO klasse oder in GhostCar, bzw. je nach dem wie dieses umgesetzt wird
+void Car::loadHistoryFromFile(const std::string& file){
+    std::vector<historyEntry> historyFromFile;
+    historyEntry currHistoryEntry;
+    string line;
+    string skip;
+    ifstream fIn (file);
+    if (fIn.is_open())
+    {
+        while ( getline (fIn,line) ) //read stream line by line
+        {
+            // cout << line << '\n';
+            
+            // read historyEntry
+            if(line.size() > 0){
+                std::istringstream in(line);      //make a stream for the line itself
+                
+                in >> currHistoryEntry.time; // read time
+                
+                in.ignore(4, EOF); // ignore " : ("
+                
+                // read carMatrix
+                for(int i = 0; i < 4; i++){
+                    in.ignore(1, EOF); // ignore "("
+                    in >> currHistoryEntry.carMatrix[i][0];
+                    in.ignore(2, EOF); // ignore ", "
+                    in >> currHistoryEntry.carMatrix[i][1];
+                    in.ignore(2, EOF); // ignore ", "
+                    in >> currHistoryEntry.carMatrix[i][2];
+                    in.ignore(2, EOF); // ignore ", "
+                    in >> currHistoryEntry.carMatrix[i][3];
+                    in.ignore(3, '\n'); // ignore "), " or newline
+                }
+            }
+            historyFromFile.push_back(currHistoryEntry);
+        }
+        fIn.close();
+    }
+    else cout << "Unable to open file";
+    
+//    std::string currMatrix = glm::to_string(historyFromFile.at(0).carMatrix).erase(0, 6);
+//    cout << "historyFromFile.at(0).carMatrix: ";
+//    cout << currMatrix;
+//    cout << "\n";
+//
+//    currMatrix = glm::to_string(historyFromFile.at(60).carMatrix).erase(0, 6);
+//    cout << "historyFromFile.at(60).carMatrix: ";
+//    cout << currMatrix;
+//    cout << "\n";
+}

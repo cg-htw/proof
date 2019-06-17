@@ -22,6 +22,12 @@
 
 #include "Model.hpp"
 
+// FileIO
+#include <iostream>
+#include <fstream>
+#include <iterator>
+#include "glm/ext.hpp"
+
 struct historyEntry {
     double time;
     glm::mat4 carMatrix;
@@ -85,6 +91,9 @@ public:
     
     void performTransformations();
     void draw(Shader shader);
+    
+    void saveHistoryToFile(const std::string& file);
+    void loadHistoryFromFile(const std::string& file);
      // destructor probably not needed
 //    ~Car();
 };
