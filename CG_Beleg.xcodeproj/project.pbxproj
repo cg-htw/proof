@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		182095B222B8F504004552BB /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 182095B122B8F504004552BB /* libGLEW.2.1.0.dylib */; };
+		182095B422B8F572004552BB /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 182095B322B8F572004552BB /* libglfw.3.3.dylib */; };
 		1836057122AFE5A400423251 /* text2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1836056F22AFE5A400423251 /* text2D.cpp */; };
+		188478E722B8EEE80028395A /* GhostController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 188478E522B8EEE80028395A /* GhostController.cpp */; };
 		18938D7A22AFBC680012FC3C /* Car.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18938D7822AFBC680012FC3C /* Car.cpp */; };
 		18938D7E22AFC2A40012FC3C /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18938D7C22AFC2A40012FC3C /* Model.cpp */; };
 		18D8A0BE229C63BC000B2709 /* libassimp.4.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D8A0BD229C63BB000B2709 /* libassimp.4.1.0.dylib */; };
@@ -22,8 +25,6 @@
 		E2639AE8190D169200B6251A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2639AE7190D169200B6251A /* OpenGL.framework */; };
 		E2639AFC190D16FF00B6251A /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2639AFB190D16FF00B6251A /* IOKit.framework */; };
 		E29C2A8E19FB7AAD00A6FCD2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E29C2A8C19FB7AA500A6FCD2 /* QuartzCore.framework */; };
-		E29C2ACA19FCA1C400A6FCD2 /* glew.c in Sources */ = {isa = PBXBuildFile; fileRef = E29C2AC919FCA1C400A6FCD2 /* glew.c */; };
-		E29C2AD219FCA21900A6FCD2 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E29C2AC719FCA1A100A6FCD2 /* libglfw3.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -40,9 +41,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		182095B122B8F504004552BB /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = source/common/external/libs/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
+		182095B322B8F572004552BB /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = source/common/external/libs/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		1836056D22AFDEAB00423251 /* libglut.3.10.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglut.3.10.0.dylib; path = source/common/external/libs/libglut.3.10.0.dylib; sourceTree = "<group>"; };
 		1836056F22AFE5A400423251 /* text2D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = text2D.cpp; sourceTree = "<group>"; };
 		1836057022AFE5A400423251 /* text2D.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = text2D.hpp; sourceTree = "<group>"; };
+		188478E522B8EEE80028395A /* GhostController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GhostController.cpp; sourceTree = "<group>"; };
+		188478E622B8EEE80028395A /* GhostController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GhostController.hpp; sourceTree = "<group>"; };
 		18938D7822AFBC680012FC3C /* Car.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Car.cpp; sourceTree = "<group>"; };
 		18938D7922AFBC680012FC3C /* Car.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Car.hpp; sourceTree = "<group>"; };
 		18938D7B22AFBD1B0012FC3C /* Object3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Object3D.h; sourceTree = "<group>"; };
@@ -103,8 +108,6 @@
 		E2639AE7190D169200B6251A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		E2639AFB190D16FF00B6251A /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		E29C2A8C19FB7AA500A6FCD2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		E29C2AC719FCA1A100A6FCD2 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = platforms/osx/libglfw3.a; sourceTree = "<group>"; };
-		E29C2AC919FCA1C400A6FCD2 /* glew.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glew.c; path = source/common/thirdparty/glew/src/glew.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,10 +115,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				182095B422B8F572004552BB /* libglfw.3.3.dylib in Frameworks */,
+				182095B222B8F504004552BB /* libGLEW.2.1.0.dylib in Frameworks */,
 				18D8A0C0229C63CC000B2709 /* libsoil2-debug.a in Frameworks */,
 				18D8A0BE229C63BC000B2709 /* libassimp.4.1.0.dylib in Frameworks */,
 				E29C2A8E19FB7AAD00A6FCD2 /* QuartzCore.framework in Frameworks */,
-				E29C2AD219FCA21900A6FCD2 /* libglfw3.a in Frameworks */,
 				E2639AFC190D16FF00B6251A /* IOKit.framework in Frameworks */,
 				E2639AE8190D169200B6251A /* OpenGL.framework in Frameworks */,
 				E2639951190D148400B6251A /* Cocoa.framework in Frameworks */,
@@ -128,6 +132,8 @@
 		185840F3229C598300848119 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				182095B322B8F572004552BB /* libglfw.3.3.dylib */,
+				182095B122B8F504004552BB /* libGLEW.2.1.0.dylib */,
 				1836056D22AFDEAB00423251 /* libglut.3.10.0.dylib */,
 				18D8A0BF229C63CC000B2709 /* libsoil2-debug.a */,
 				18D8A0BD229C63BB000B2709 /* libassimp.4.1.0.dylib */,
@@ -251,6 +257,8 @@
 				1836056F22AFE5A400423251 /* text2D.cpp */,
 				1836057022AFE5A400423251 /* text2D.hpp */,
 				18B46BC422B69DDC000D3444 /* Input.hpp */,
+				188478E522B8EEE80028395A /* GhostController.cpp */,
+				188478E622B8EEE80028395A /* GhostController.hpp */,
 			);
 			path = source;
 			sourceTree = "<group>";
@@ -259,8 +267,6 @@
 			isa = PBXGroup;
 			children = (
 				18D8A0BC229C62C3000B2709 /* external */,
-				E29C2AC719FCA1A100A6FCD2 /* libglfw3.a */,
-				E29C2AC919FCA1C400A6FCD2 /* glew.c */,
 				E29C2A8C19FB7AA500A6FCD2 /* QuartzCore.framework */,
 				E2639AE7190D169200B6251A /* OpenGL.framework */,
 				E2639950190D148400B6251A /* Cocoa.framework */,
@@ -321,8 +327,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9F1A7A01CFED506001A5641 /* shader.cpp in Sources */,
+				188478E722B8EEE80028395A /* GhostController.cpp in Sources */,
 				18938D7A22AFBC680012FC3C /* Car.cpp in Sources */,
-				E29C2ACA19FCA1C400A6FCD2 /* glew.c in Sources */,
 				18938D7E22AFC2A40012FC3C /* Model.cpp in Sources */,
 				B9F1A79E1CFED506001A5641 /* objects.cpp in Sources */,
 				B9F1A7A11CFED506001A5641 /* texture.cpp in Sources */,
@@ -430,7 +436,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(PROJECT_DIR)/source/common/thirdparty\"/**",
 					"\"$(PROJECT_DIR)/source/common/external/include\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
@@ -449,7 +454,6 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(PROJECT_DIR)/source/common/thirdparty\"/**",
 					"\"$(PROJECT_DIR)/source/common/external/include\"/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
