@@ -22,6 +22,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+
 using namespace glm;
 
 // Other Libs
@@ -222,12 +224,12 @@ int main()
         // Projection matrix : 45� Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
         projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 
-        // Camera matrix
-        view = glm::lookAt(glm::vec3(0,20,-15), // Camera is at (0,2,-5), in World Space
-                           glm::vec3(0,0,0),  // and looks at the origin
-                           glm::vec3(0,1,0)); // Head is up (set to 0,-1,0 to look upside-down
+//        // Camera matrix
+//        view = glm::lookAt(glm::vec3(0,20,-15), // Camera is at (0,2,-5), in World Space
+//                           glm::vec3(0,0,0),  // and looks at the origin
+//                           glm::vec3(0,1,0)); // Head is up (set to 0,-1,0 to look upside-down
 
-        view = glm::rotate(view, -1.5708f, glm::vec3( 0.0, 1.0, 0.0));
+//        view = glm::rotate(view, -1.5708f, glm::vec3( 0.0, 1.0, 0.0));
         //
         // Model matrix : an identity matrix (model will be at the origin)
         model = glm::mat4(1.0f);
@@ -266,11 +268,6 @@ int main()
         //glActiveTexture(GL_TEXTURE0); // da multiple texturing m�glich ist notwendig anzugeben welche grad die gewollte ist f�r dieses Texture Unit.
         //glBindTexture(GL_TEXTURE_2D, monkey_texture);
 
-        model = car1->getModel();
-
-        sendMVP();
-        //drawCube();
-        car1->draw( *shader );
 
         // TODO: wahrscheinlich schlauer ausserhalb der schleife, da nur einmal yu yeichnen
         drawLevel1();
@@ -287,7 +284,36 @@ int main()
         // TODO: make it work
         //printText2D(text.data(), 10, 500, 60);
 
+        model = car1->getModel();
         
+    
+        sendMVP();
+        //drawCube();
+        car1->draw( *shader );
+        
+        glm::vec3 scale;
+        glm::quat rotationQuat;
+        glm::vec3 translation;
+        glm::vec3 skew;
+        glm::vec4 perspective;
+        // TODO: initial ist carMatrix bisher leer --> abfangen
+        glm::decompose(car1->getModel(), scale, rotationQuat, translation, skew, perspective);
+        glm::vec3 rotation = glm::radians(glm::eulerAngles(rotationQuat));
+//        glm::mat3 rotationMatrix 
+        
+        
+        //        rotation quat in rotaitonsmatrix konvertieren, dann vektor 0,0,1 (sagt wo vorne ist).  Mit der rotationsmatrix k;nnen wir dann 001 multipliyieren. diese xzy werte dann abyiehen von translation bei lookat
+        // Set camera matrix
+        view = glm::lookAt(glm::vec3(translation.x - 1,translation.y + 0.5,translation.z), // Camera is at (0,2,-5), in World Space
+                           glm::vec3(translation.x ,translation.y,translation.z),  // and looks at the origin
+                           glm::vec3(0, 1, 0 )); // Head is up (set to 0,-1,0 to look upside-down
+        
+//        der inverse vektor der fahrtrichug
+        
+        sendMVP();
+
+//        car1->draw( *shader );
+
         // Swap buffers
         glfwSwapBuffers(window);
         

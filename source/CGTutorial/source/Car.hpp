@@ -26,7 +26,7 @@
 #include <iostream>
 #include <fstream>
 #include <iterator>
-#include "glm/ext.hpp"
+#include <glm/ext.hpp>
 
 struct historyEntry {
     double time;
@@ -73,6 +73,9 @@ public:
     void accelerate(bool forward); // called when w/s is pressed. increases velocity until max/min is reached
     void brake();
     void brakeByFriction();
+    glm::mat4 getModel();
+    glm::vec3 getTranslation();
+    glm::vec3 getRotation();
     void setMaxVelocity(float maxVelocity);
     void setMinVelocity(float maxVelocity);
     void setPositiveAcceleration(float positiveAcceleration);
@@ -86,7 +89,6 @@ public:
    
     void scale(float scaleFactor);
     
-    glm::mat4 getModel();
     void setTexture(GLuint textId);
     
     void performTransformations();

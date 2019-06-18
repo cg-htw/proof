@@ -14,13 +14,21 @@ Car::Car(Model carModel, float maxVelocity): carModel(carModel), maxVelocity(max
     minVelocity = -500.0f;
     positiveAcceleration = 5.0f;
     negativeAcceleration = -2.0f;
-    turnAngle = 4.0f;
+    turnAngle = 10.0f;
     brakingForce = 0.2f;
     friction = 0.05f;
 }
 
 glm::mat4 Car::getModel(){
     return carMatrix;
+}
+
+glm::vec3 Car::getTranslation(){
+    return translation;
+}
+
+glm::vec3 Car::getRotation(){
+    return rotation;
 }
 
 void Car::setMaxVelocity(float maxVelocity){
@@ -157,7 +165,10 @@ void Car::saveHistoryToFile(const std::string& file){
         for(int i = 0; i < history.size(); i++){
             fOut << history.at(i).time;
             fOut << " : ";
-            std::string matrix = glm::to_string(history.at(i).carMatrix).erase(0, 6);
+            glm::vec3 abc(1.0f);
+//            std::string matrix = glm::to_string(history.at(i).carMatrix).erase(0, 6);
+            // TODO: make it work
+            std::string matrix = "dummy";
             fOut << matrix << std::endl;
             fOut << "\n";
         }
@@ -176,7 +187,7 @@ void Car::loadHistoryFromFile(const std::string& file){
     {
         while ( getline (fIn,line) ) //read stream line by line
         {
-            // cout << line << '\n';
+//            cout << line << '\n';
             
             // read historyEntry
             if(line.size() > 0){
@@ -189,6 +200,8 @@ void Car::loadHistoryFromFile(const std::string& file){
                 // read carMatrix
                 for(int i = 0; i < 4; i++){
                     in.ignore(1, EOF); // ignore "("
+                    
+                    // TODO inner loop
                     in >> currHistoryEntry.carMatrix[i][0];
                     in.ignore(2, EOF); // ignore ", "
                     in >> currHistoryEntry.carMatrix[i][1];
@@ -196,6 +209,7 @@ void Car::loadHistoryFromFile(const std::string& file){
                     in >> currHistoryEntry.carMatrix[i][2];
                     in.ignore(2, EOF); // ignore ", "
                     in >> currHistoryEntry.carMatrix[i][3];
+                    
                     in.ignore(3, '\n'); // ignore "), " or newline
                 }
             }
