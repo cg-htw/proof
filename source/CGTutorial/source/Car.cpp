@@ -102,7 +102,11 @@ void Car::brakeByFriction(){
 }
 
 void Car::turn(bool right){
+//    if(velocity > 0)
     pendingTurn -= right? turnAngle : -turnAngle;
+//    else
+//        pendingTurn = right? -turnAngle : turnAngle;
+    
     this->rotation[2] -= pendingTurn;
 }
 

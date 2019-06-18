@@ -23,6 +23,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 using namespace glm;
 
@@ -153,7 +154,7 @@ int main()
     
     
     car1 = new Car(carModel, 10.0f);
-    car1->scale(1.0/7.5);
+    car1->scale(1.0/13.5);
     car1->rotateBy(glm::vec3(glm::radians(-90.0), 0.0, glm::radians(90.0)));
     car1->moveBy(glm::vec3(-3.0, 2.0, 6.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
     
@@ -298,13 +299,32 @@ int main()
         glm::vec4 perspective;
         // TODO: initial ist carMatrix bisher leer --> abfangen
         glm::decompose(car1->getModel(), scale, rotationQuat, translation, skew, perspective);
-        glm::vec3 rotation = glm::radians(glm::eulerAngles(rotationQuat));
-//        glm::mat3 rotationMatrix 
         
+//        glm::vec3 rotation = glm::radians(glm::eulerAngles(rotationQuat));
+        
+        glm::mat3 rotationMatrix = glm::toMat3(rotationQuat);
+        glm::vec3 direction = rotationMatrix * glm::vec3(0.0f,1.0f,0.0f);
+        glm::vec3 from = translation - direction * -0.6f;
+
+        from[1] = from[1] + 0.3;
+//        cout << "\n direction x: ";
+//        cout << direction.x;
+//        cout << " direction y: ";
+//        cout << direction.y;
+//        cout << " direction z: ";
+//        cout << direction.z;
+//
+//        for(int i = 0; i < 3; i++){
+//            for(int j = 0; j < 3; j++){
+//                cout << "\n rotationMatrix x: ";
+//                cout << rotationMatrix[i][j];
+//            }
+//        }
+       
         
         //        rotation quat in rotaitonsmatrix konvertieren, dann vektor 0,0,1 (sagt wo vorne ist).  Mit der rotationsmatrix k;nnen wir dann 001 multipliyieren. diese xzy werte dann abyiehen von translation bei lookat
         // Set camera matrix
-        view = glm::lookAt(glm::vec3(translation.x - 1,translation.y + 0.5,translation.z), // Camera is at (0,2,-5), in World Space
+        view = glm::lookAt(from, // Camera is at (0,2,-5), in World Space
                            glm::vec3(translation.x ,translation.y,translation.z),  // and looks at the origin
                            glm::vec3(0, 1, 0 )); // Head is up (set to 0,-1,0 to look upside-down
         
