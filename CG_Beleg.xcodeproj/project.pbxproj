@@ -10,7 +10,7 @@
 		182095B222B8F504004552BB /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 182095B122B8F504004552BB /* libGLEW.2.1.0.dylib */; };
 		182095B422B8F572004552BB /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 182095B322B8F572004552BB /* libglfw.3.3.dylib */; };
 		1836057122AFE5A400423251 /* text2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1836056F22AFE5A400423251 /* text2D.cpp */; };
-		188478E722B8EEE80028395A /* GhostController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 188478E522B8EEE80028395A /* GhostController.cpp */; };
+		188478E722B8EEE80028395A /* CarGhost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 188478E522B8EEE80028395A /* CarGhost.cpp */; };
 		18938D7A22AFBC680012FC3C /* Car.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18938D7822AFBC680012FC3C /* Car.cpp */; };
 		18938D7E22AFC2A40012FC3C /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18938D7C22AFC2A40012FC3C /* Model.cpp */; };
 		18D8A0BE229C63BC000B2709 /* libassimp.4.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D8A0BD229C63BB000B2709 /* libassimp.4.1.0.dylib */; };
@@ -46,8 +46,8 @@
 		1836056D22AFDEAB00423251 /* libglut.3.10.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglut.3.10.0.dylib; path = source/common/external/libs/libglut.3.10.0.dylib; sourceTree = "<group>"; };
 		1836056F22AFE5A400423251 /* text2D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = text2D.cpp; sourceTree = "<group>"; };
 		1836057022AFE5A400423251 /* text2D.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = text2D.hpp; sourceTree = "<group>"; };
-		188478E522B8EEE80028395A /* GhostController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GhostController.cpp; sourceTree = "<group>"; };
-		188478E622B8EEE80028395A /* GhostController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GhostController.hpp; sourceTree = "<group>"; };
+		188478E522B8EEE80028395A /* CarGhost.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CarGhost.cpp; sourceTree = "<group>"; };
+		188478E622B8EEE80028395A /* CarGhost.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CarGhost.hpp; sourceTree = "<group>"; };
 		18938D7822AFBC680012FC3C /* Car.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Car.cpp; sourceTree = "<group>"; };
 		18938D7922AFBC680012FC3C /* Car.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Car.hpp; sourceTree = "<group>"; };
 		18938D7B22AFBD1B0012FC3C /* Object3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Object3D.h; sourceTree = "<group>"; };
@@ -257,8 +257,8 @@
 				1836056F22AFE5A400423251 /* text2D.cpp */,
 				1836057022AFE5A400423251 /* text2D.hpp */,
 				18B46BC422B69DDC000D3444 /* Input.hpp */,
-				188478E522B8EEE80028395A /* GhostController.cpp */,
-				188478E622B8EEE80028395A /* GhostController.hpp */,
+				188478E522B8EEE80028395A /* CarGhost.cpp */,
+				188478E622B8EEE80028395A /* CarGhost.hpp */,
 			);
 			path = source;
 			sourceTree = "<group>";
@@ -327,7 +327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9F1A7A01CFED506001A5641 /* shader.cpp in Sources */,
-				188478E722B8EEE80028395A /* GhostController.cpp in Sources */,
+				188478E722B8EEE80028395A /* CarGhost.cpp in Sources */,
 				18938D7A22AFBC680012FC3C /* Car.cpp in Sources */,
 				18938D7E22AFC2A40012FC3C /* Model.cpp in Sources */,
 				B9F1A79E1CFED506001A5641 /* objects.cpp in Sources */,

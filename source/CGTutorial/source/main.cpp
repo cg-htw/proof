@@ -17,6 +17,7 @@
 
 #include "Object3D.h"
 #include "Car.hpp"
+#include "CarGhost.hpp"
 
 // Include GLM
 #include <glm/glm.hpp>
@@ -57,6 +58,9 @@ GLuint programID;
 Shader *shader;
 
 Car *car1;
+//Car *car2;
+Model *carModel;
+CarGhost *carGhost = NULL;
 #include "Input.hpp"
 
 Model *streetCurveA90Model;
@@ -145,7 +149,7 @@ int main()
     
     // Load models
 
-    Model carModel( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
+    carModel = new Model( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
     streetCurveA90Model = new Model( "resources/Street_and_landscape/StreetCurveA90.fbx" );
     streetCurveB90Model = new Model( "resources/Street_and_landscape/StreetCurveB90.fbx" );
     streetStraight = new Model( "resources/Street_and_landscape/StreetStraight.fbx" );
@@ -153,11 +157,18 @@ int main()
     buildLevel1();
     
     
-    car1 = new Car(carModel, 10.0f);
+    car1 = new Car(*carModel, 10.0f);
     car1->scale(1.0/13.5);
     car1->rotateBy(glm::vec3(glm::radians(-90.0), 0.0, glm::radians(90.0)));
     car1->moveBy(glm::vec3(-3.0, 2.0, 6.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
     
+    // TODO extraxt nesecary methods from car class to a super class and set up inheritance
+//    car2 = new Car(carModel, 10.0f);
+//    car2->scale(1.0/13.5);
+//    car2->rotateBy(glm::vec3(glm::radians(-90.0), 0.0, glm::radians(90.0)));
+//    car2->moveBy(glm::vec3(-3.0, 2.0, 6.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
+    
+    carGhost = new CarGhost("lastRide.txt", *carModel);
     
     // read data to be passed to graphics card later
     // vectors are basically arrays with variable lenght
@@ -285,12 +296,16 @@ int main()
         // TODO: make it work
         //printText2D(text.data(), 10, 500, 60);
 
-        model = car1->getModel();
-        
+        model = car1->getModelMatrix();
     
         sendMVP();
         //drawCube();
         car1->draw( *shader );
+        
+        model = carGhost->getModelMatrix();
+        sendMVP();
+        // TODO: anderes Model fuer ghost --> min. andere farbe, besser noch transparent
+        carGhost->draw(*shader, glfwGetTime());
         
         glm::vec3 scale;
         glm::quat rotationQuat;
@@ -298,7 +313,7 @@ int main()
         glm::vec3 skew;
         glm::vec4 perspective;
         // TODO: initial ist carMatrix bisher leer --> abfangen
-        glm::decompose(car1->getModel(), scale, rotationQuat, translation, skew, perspective);
+        glm::decompose(car1->getModelMatrix(), scale, rotationQuat, translation, skew, perspective);
         
 //        glm::vec3 rotation = glm::radians(glm::eulerAngles(rotationQuat));
         
@@ -343,7 +358,6 @@ int main()
     }
 
     car1->saveHistoryToFile("lastRide.txt");
-    car1->loadHistoryFromFile("lastRide.txt");
     
     
     glDeleteProgram(programID);

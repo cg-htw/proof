@@ -26,9 +26,10 @@
 #include <iostream>
 #include <fstream>
 #include <iterator>
-#include <glm/ext.hpp>
+//#include <glm/ext.hpp>
+#include <glm/gtx/string_cast.hpp>
 
-struct historyEntry {
+struct HistoryEntry {
     double time;
     glm::mat4 carMatrix;
 };
@@ -37,7 +38,7 @@ class Car
 {
     // Auslagern in Transform, was bisschen sowas wie ein interface/partial ist und für StreetPart wiederverwendet werden kann
     Model carModel;
-    glm::mat4 carMatrix;
+    glm::mat4 carModelMatrix;
     
     glm::vec3 translation;
     glm::vec3 rotation;
@@ -59,7 +60,7 @@ class Car
     double deltaTime;
     double currentTime;
     
-    std::vector<historyEntry> history;
+    std::vector<HistoryEntry> history;
     
 public:
     
@@ -73,7 +74,7 @@ public:
     void accelerate(bool forward); // called when w/s is pressed. increases velocity until max/min is reached
     void brake();
     void brakeByFriction();
-    glm::mat4 getModel();
+    glm::mat4 getModelMatrix();
     glm::vec3 getTranslation();
     glm::vec3 getRotation();
     void setMaxVelocity(float maxVelocity);
@@ -95,7 +96,6 @@ public:
     void draw(Shader shader);
     
     void saveHistoryToFile(const std::string& file);
-    void loadHistoryFromFile(const std::string& file);
      // destructor probably not needed
 //    ~Car();
 };

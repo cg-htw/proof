@@ -5,7 +5,7 @@ Car::Car(Model carModel, float maxVelocity): carModel(carModel), maxVelocity(max
 {
 //    this->carModel = carModel;
 //    this->maxVelocity = maxVelocity;
-    carMatrix = glm::mat4(1.0f);
+    carModelMatrix = glm::mat4(1.0f);
     translation = glm::vec3(0.0f);
     rotation = glm::vec3(0.0f);
     scaleFactor = 1.0f;
@@ -14,13 +14,13 @@ Car::Car(Model carModel, float maxVelocity): carModel(carModel), maxVelocity(max
     minVelocity = -500.0f;
     positiveAcceleration = 5.0f;
     negativeAcceleration = -2.0f;
-    turnAngle = 10.0f;
+    turnAngle = 20.0f;
     brakingForce = 0.2f;
     friction = 0.05f;
 }
 
-glm::mat4 Car::getModel(){
-    return carMatrix;
+glm::mat4 Car::getModelMatrix(){
+    return carModelMatrix;
 }
 
 glm::vec3 Car::getTranslation(){
@@ -60,7 +60,7 @@ void Car::setFriction(float friction){
 
 void Car::moveBy(glm::vec3 deltaTranslation){
     translation += deltaTranslation;
-    carMatrix = glm::translate(carMatrix, deltaTranslation);
+    carModelMatrix = glm::translate(carModelMatrix, deltaTranslation);
 }
 
 //void Car::moveTo(glm::vec3 translation){
@@ -112,9 +112,9 @@ void Car::turn(bool right){
 
 void Car::rotateBy(glm::vec3 deltaRotation){
     this->rotation += deltaRotation;
-    carMatrix = glm::rotate(carMatrix, deltaRotation[0], glm::vec3(1.0, 0.0, 0.0) );
-    carMatrix = glm::rotate(carMatrix, deltaRotation[1], glm::vec3(0.0, 1.0, 0.0) );
-    carMatrix = glm::rotate(carMatrix, deltaRotation[2], glm::vec3(0.0, 0.0, 1.0) );
+    carModelMatrix = glm::rotate(carModelMatrix, deltaRotation[0], glm::vec3(1.0, 0.0, 0.0) );
+    carModelMatrix = glm::rotate(carModelMatrix, deltaRotation[1], glm::vec3(0.0, 1.0, 0.0) );
+    carModelMatrix = glm::rotate(carModelMatrix, deltaRotation[2], glm::vec3(0.0, 0.0, 1.0) );
 }
 
 //void Car::rotateTo(glm::vec3 rotation){
@@ -127,7 +127,7 @@ void Car::rotateBy(glm::vec3 deltaRotation){
 
 void Car::scale(float scaleFactor){
     this->scaleFactor = scaleFactor;
-    carMatrix = glm::scale(carMatrix, glm::vec3(scaleFactor));
+    carModelMatrix = glm::scale(carModelMatrix, glm::vec3(scaleFactor));
 
 }
 
@@ -150,7 +150,7 @@ void Car::performTransformations(){
 
 void Car::draw(Shader shader){
     performTransformations();
-    history.push_back({currentTime, carMatrix});
+    history.push_back({currentTime, carModelMatrix});
 
     carModel.Draw(shader);
     
@@ -161,18 +161,21 @@ void Car::draw(Shader shader){
 // TODO: Auslagern
 // TODO: nicht jeden frame speichern
 void Car::saveHistoryToFile(const std::string& file){
-    ofstream fOut (file); // equivalent to: ofstream myfile; myfile.open ("examplee.txt");
+    ofstream fOut (file);
+    // equivalent to:
+//    ofstream fOut;
+//    fOut.open (file);
+    system("pwd");
     if (fOut.is_open()) {
         /* ok, proceed with output */
-        // printf("file is open\n");
+        printf("file is open\n");
         
         for(int i = 0; i < history.size(); i++){
             fOut << history.at(i).time;
             fOut << " : ";
             glm::vec3 abc(1.0f);
-//            std::string matrix = glm::to_string(history.at(i).carMatrix).erase(0, 6);
+            std::string matrix = to_string(history.at(i).carMatrix).erase(0, 6);
             // TODO: make it work
-            std::string matrix = "dummy";
             fOut << matrix << std::endl;
             fOut << "\n";
         }
@@ -180,56 +183,3 @@ void Car::saveHistoryToFile(const std::string& file){
     } else cout << "Unable to open file";
 }
 
-// TODO: Auslagern, entweder in fileIO klasse oder in GhostCar, bzw. je nach dem wie dieses umgesetzt wird
-void Car::loadHistoryFromFile(const std::string& file){
-    std::vector<historyEntry> historyFromFile;
-    historyEntry currHistoryEntry;
-    string line;
-    string skip;
-    ifstream fIn (file);
-    if (fIn.is_open())
-    {
-        while ( getline (fIn,line) ) //read stream line by line
-        {
-//            cout << line << '\n';
-            
-            // read historyEntry
-            if(line.size() > 0){
-                std::istringstream in(line);      //make a stream for the line itself
-                
-                in >> currHistoryEntry.time; // read time
-                
-                in.ignore(4, EOF); // ignore " : ("
-                
-                // read carMatrix
-                for(int i = 0; i < 4; i++){
-                    in.ignore(1, EOF); // ignore "("
-                    
-                    // TODO inner loop
-                    in >> currHistoryEntry.carMatrix[i][0];
-                    in.ignore(2, EOF); // ignore ", "
-                    in >> currHistoryEntry.carMatrix[i][1];
-                    in.ignore(2, EOF); // ignore ", "
-                    in >> currHistoryEntry.carMatrix[i][2];
-                    in.ignore(2, EOF); // ignore ", "
-                    in >> currHistoryEntry.carMatrix[i][3];
-                    
-                    in.ignore(3, '\n'); // ignore "), " or newline
-                }
-            }
-            historyFromFile.push_back(currHistoryEntry);
-        }
-        fIn.close();
-    }
-    else cout << "Unable to open file";
-    
-//    std::string currMatrix = glm::to_string(historyFromFile.at(0).carMatrix).erase(0, 6);
-//    cout << "historyFromFile.at(0).carMatrix: ";
-//    cout << currMatrix;
-//    cout << "\n";
-//
-//    currMatrix = glm::to_string(historyFromFile.at(60).carMatrix).erase(0, 6);
-//    cout << "historyFromFile.at(60).carMatrix: ";
-//    cout << currMatrix;
-//    cout << "\n";
-}
