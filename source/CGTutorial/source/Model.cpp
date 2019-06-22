@@ -1,6 +1,6 @@
 #include "Model.hpp"
 
-Model::Model( GLchar *path )
+Model::Model( string path )
     {
         loadModel( path );
     }

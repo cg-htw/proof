@@ -34,14 +34,14 @@ using namespace glm;
 // fromn OpenGL Tutorial
 #include "shader.hpp"
 
-// Wuerfel und Kugel
-#include "objects.hpp"
 
 #include "objloader.hpp"
 
 #include "texture.hpp"
 
 #include "text2D.hpp"
+
+// TODO remove unused imports
 
 
 // Properties
@@ -157,10 +157,10 @@ int main()
     buildLevel1();
     
     
-    car1 = new Car(*carModel, 10.0f);
+    car1 = new Car(*carModel, 2000.0f);
     car1->scale(1.0/13.5);
     car1->rotateBy(glm::vec3(glm::radians(-90.0), 0.0, glm::radians(90.0)));
-    car1->moveBy(glm::vec3(-3.0, 2.0, 6.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
+    car1->moveBy(glm::vec3(-3.0, 2.0, 2.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
     
     // TODO extraxt nesecary methods from car class to a super class and set up inheritance
 //    car2 = new Car(carModel, 10.0f);
@@ -169,63 +169,12 @@ int main()
 //    car2->moveBy(glm::vec3(-3.0, 2.0, 6.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
     
     carGhost = new CarGhost("lastRide.txt", *carModel);
-    
-    // read data to be passed to graphics card later
-    // vectors are basically arrays with variable lenght
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec2> uvs;
-    std::vector<glm::vec3> normals;
-    // bool res = loadOBJ("resources/teapot.obj", vertices, uvs, normals);
-
-    // Assign each Object to its own VAO in order to be able to have multiple objects.
-    // VAOs (Vertex Array Objects) are Containers for multiple buffers to be set together.
-    GLuint vertexArrayIDTeapot; // Create container
-    glGenVertexArrays(1, &vertexArrayIDTeapot);
-    glBindVertexArray(vertexArrayIDTeapot);
-    
-    // Eckpunkte anlegen, fuellen mit vertices
-    // Ein ArrayBuffer speichert Daten zu Eckpunkten (hier xyz bzw. Position)
-    GLuint vertexbuffer;
-    glGenBuffers(1, &vertexbuffer); // Kennung erhalten
-    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer); // Daten zur Kennung definieren
-    // Buffer zugreifbar f�r die Shader machen
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-    
-    // Erst nach glEnableVertexAttribArray kann DrawArrays auf die Daten zugreifen...
-    glEnableVertexAttribArray(0); // siehe layout im vertex shader: location = 0
-    glVertexAttribPointer(0,  // location = 0
-                          3,  // Datenformat vec3: 3 floats fuer xyz
-                          GL_FLOAT,
-                          GL_FALSE, // Fixedpoint data normalisieren ?
-                          0, // Eckpunkte direkt hintereinander gespeichert
-                          (void*) 0); // abweichender Datenanfang ?
-    
-
-    GLuint uvbuffer; // Hier alles analog fuer Texturkoordinaten in location == 1 (2 floats u und v!)
-    glGenBuffers(1, &uvbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(1); // siehe layout im vertex shader
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    // Load the monkey_texture
-//    GLuint monkey_texture = loadBMP_custom("resources/red.bmp"); // monkey_texture eine zahl,
-     GLuint monkey_texture = loadBMP_custom("resources/mandrill.bmp"); // monkey_texture eine zahl,
 
     street_texture = TextureFromFile("rua.jpg", "resources/Street_and_landscape");
     grass_texture = TextureFromFile("grass.jpg", "resources/Street_and_landscape");
     
     initText2D( "resources/Text2D/Holstein.DDS" );
     
-    
-    
-    // �bertragen der normalen vektoren in container
-    GLuint normalbuffer; // Hier alles analog f�r Normalen in location == 2
-    glGenBuffers(1, &normalbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(2); // siehe layout im vertex shader
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     
     // Eventloop
     while (!glfwWindowShouldClose(window))
@@ -236,53 +185,32 @@ int main()
         // Projection matrix : 45� Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
         projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 
-//        // Camera matrix
-//        view = glm::lookAt(glm::vec3(0,20,-15), // Camera is at (0,2,-5), in World Space
-//                           glm::vec3(0,0,0),  // and looks at the origin
-//                           glm::vec3(0,1,0)); // Head is up (set to 0,-1,0 to look upside-down
-
-//        view = glm::rotate(view, -1.5708f, glm::vec3( 0.0, 1.0, 0.0));
-        //
         // Model matrix : an identity matrix (model will be at the origin)
         model = glm::mat4(1.0f);
         
-
+        // View is set before last sendMVP()
 
         glm::mat4 save = model;
         model = glm::translate(model, glm::vec3(1.5, 0.0, 0.0));
-        
 
-        model = glm::scale(model, glm::vec3(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0));
-
-        // Bind our monkey_texture in Texture Unit 0
-        glActiveTexture(GL_TEXTURE0); // because of the option to use multiple texturing it ios required to define which monkey_texture to be active.
-        glBindTexture(GL_TEXTURE_2D, monkey_texture);
-        
         // Set our "myTextureSampler" sampler to user Texture Unit 0
+        // TODO: vlt. notwendig mit shader statt programmID fuer die Zeitanzeige
         glUniform1i(glGetUniformLocation(programID, "myTextureSampler"), 0);
         
-        
-        // Shader mitteilen wo sich das licht befindet.
-        // relativ beliebig wo, k�nnte auch vor schleife sein, wenn sich (wie bisher bei uns) die lampenposition nicht �ndert
          glm::vec3 lightPos = glm::vec3(4,15,-4);
          glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
         
         sendMVP();
-    
-
-        // Licht am roboterarm
-        //glm::vec4 lpw = model * glm::vec4(0.0, 0.3, 0.0, 1.0); // light position world
-        //glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lpw.x / lpw.w, lpw.y / lpw.w, lpw.z / lpw.w); // lpw.w = normalisierungszahl, ist aber bei uns sowieso 1
-        
         
         model = save;
         // Bind our monkey_texture in Texture Unit 0
-        //glActiveTexture(GL_TEXTURE0); // da multiple texturing m�glich ist notwendig anzugeben welche grad die gewollte ist f�r dieses Texture Unit.
+        //glActiveTexture(GL_TEXTURE0); // because of the option to use multiple texturing it ios required to define which monkey_texture to be active.
         //glBindTexture(GL_TEXTURE_2D, monkey_texture);
 
 
         // TODO: wahrscheinlich schlauer ausserhalb der schleife, da nur einmal yu yeichnen
         drawLevel1();
+        
         
         //get time since game started
         GLint64 timer;
@@ -294,8 +222,9 @@ int main()
         //printf("Seconds: %s\n", text.data());
 
         // TODO: make it work
-        //printText2D(text.data(), 10, 500, 60);
+//        printText2D(text.data(), 10, 500, 60);
 
+        
         model = car1->getModelMatrix();
     
         sendMVP();
@@ -307,47 +236,24 @@ int main()
         // TODO: anderes Model fuer ghost --> min. andere farbe, besser noch transparent
         carGhost->draw(*shader, glfwGetTime());
         
+        
         glm::vec3 scale;
         glm::quat rotationQuat;
         glm::vec3 translation;
         glm::vec3 skew;
         glm::vec4 perspective;
-        // TODO: initial ist carMatrix bisher leer --> abfangen
         glm::decompose(car1->getModelMatrix(), scale, rotationQuat, translation, skew, perspective);
-        
-//        glm::vec3 rotation = glm::radians(glm::eulerAngles(rotationQuat));
         
         glm::mat3 rotationMatrix = glm::toMat3(rotationQuat);
         glm::vec3 direction = rotationMatrix * glm::vec3(0.0f,1.0f,0.0f);
         glm::vec3 from = translation - direction * -0.6f;
-
         from[1] = from[1] + 0.3;
-//        cout << "\n direction x: ";
-//        cout << direction.x;
-//        cout << " direction y: ";
-//        cout << direction.y;
-//        cout << " direction z: ";
-//        cout << direction.z;
-//
-//        for(int i = 0; i < 3; i++){
-//            for(int j = 0; j < 3; j++){
-//                cout << "\n rotationMatrix x: ";
-//                cout << rotationMatrix[i][j];
-//            }
-//        }
-       
         
-        //        rotation quat in rotaitonsmatrix konvertieren, dann vektor 0,0,1 (sagt wo vorne ist).  Mit der rotationsmatrix k;nnen wir dann 001 multipliyieren. diese xzy werte dann abyiehen von translation bei lookat
         // Set camera matrix
         view = glm::lookAt(from, // Camera is at (0,2,-5), in World Space
                            glm::vec3(translation.x ,translation.y,translation.z),  // and looks at the origin
                            glm::vec3(0, 1, 0 )); // Head is up (set to 0,-1,0 to look upside-down
-        
-//        der inverse vektor der fahrtrichug
-        
         sendMVP();
-
-//        car1->draw( *shader );
 
         // Swap buffers
         glfwSwapBuffers(window);
@@ -355,23 +261,13 @@ int main()
         // Poll for and process events
         // z.b. Maus oder Tastatureingabe �berpr�fen, wenn ja rufe die funktion key_callback auf, sofern diese vorhanden(Ja), oder mouse_callback,... (checkt ob vorhanden, wenn ja wirds ausgef�hrt)
         glfwPollEvents();
+        reactOnPressedKeys();
     }
 
     car1->saveHistoryToFile("lastRide.txt");
     
-    
     glDeleteProgram(programID);
 
-    // 5
-    // Cleanup VBO and shader
-    // n�tig am ende wenn das programm terminiert. Macht aber alternativ auch das bettriebssystem
-    glDeleteBuffers(1, &vertexbuffer);
-    
-    glDeleteBuffers(1, &normalbuffer);
-    
-    glDeleteBuffers(1, &uvbuffer);
-    glDeleteTextures(1, &monkey_texture);
-    
     cleanupText2D();
     
     // Close OpenGL window and terminate GLFW
@@ -379,10 +275,6 @@ int main()
     return 0;
 }
 
-
-/*
- Genau diese Parameter f�r glfwSetErrorCallback(error_callback) n�tig
- */
 void error_callback(int error, const char* description)
 {
     fputs(description, stderr);
@@ -401,25 +293,8 @@ void sendMVP()
     glUniformMatrix4fv(glGetUniformLocation(programID, "P"), 1, GL_FALSE, &projection[0][0]);
 }
 
-// TODO: Eine klasse car machen. Die alle Methoden hat die ich zu kontrolle des cars benötige.
-/*
- this->spaceship->transform.moveby(vektor, OBJECT) // im object space, hat er variabel geschrieben
- // moveBy, rotateTo, rotateBy  (, moveTo)
- 
- in moveby
- translateMatrix
- - transform entähllt alle daten über räumliche informationen meines obejcts( hat u.a. vektoren für oposition , rotation, scale
- if( // erstmal matrix updaten--> neue matrix, die erst an poisiton geschoben, dann rotiert, dann evt. noch skaliert wird.
- dann matrix um die translateMatrix(vector3)
- --> glm::translate(this->transmMatrix, vector3)
- danach updateVectorsFromMatrix(); // um qzu speichern wo matrix wie nach translation ist
- glm::dcompose(this->transMatrix, scale, rot, pos, skew, persp); (jew. davor als vec definieren)
- rot ist ein quaternion, das umrechnen in euler winkel mit glm::degrees(glm::eulerAmgles(rot))
- 
-*/
-
-
-void buildLevel1(){
+void buildLevel1()
+{
     landscape = new Model( "resources/Street_and_landscape/landscape.fbx" );
     
     // TODO auslagern in Methode Load-Level1
@@ -448,8 +323,8 @@ void buildLevel1(){
     streetObjects[5].translateTo(glm::vec3(10.0, 0.0, -5.0));
 }
 
-
-void drawLevel1(){
+void drawLevel1()
+{
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0.0, -0.01, 0.0));
     sendMVP();

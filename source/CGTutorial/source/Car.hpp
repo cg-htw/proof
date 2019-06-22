@@ -39,12 +39,7 @@ class Car
     // Auslagern in Transform, was bisschen sowas wie ein interface/partial ist und für StreetPart wiederverwendet werden kann
     Model carModel;
     glm::mat4 carModelMatrix;
-    
-    glm::vec3 translation;
-    glm::vec3 rotation;
     float scaleFactor;
-    // glm::vec3 skew;
-    // glm::vec4 perspective
     
     float velocity;
     float maxVelocity;
@@ -65,18 +60,12 @@ class Car
 public:
     
     // constructor
-    Car(Model carModel, float maxVelocity); // evt das Model übergeben
-    // evt. weiterer Konstruktor, bei dem man auch rotation und position übergeben kann, mit denen dann moveTo und rotateTo aufgerufen werden
-    
-    void moveBy(glm::vec3 deltaTranslation);
-//    void moveTo(glm::vec3 translation);
-    
-    void accelerate(bool forward); // called when w/s is pressed. increases velocity until max/min is reached
-    void brake();
-    void brakeByFriction();
+    Car(Model carModel, float maxVelocity);
+  
     glm::mat4 getModelMatrix();
-    glm::vec3 getTranslation();
-    glm::vec3 getRotation();
+    void scale(float scaleFactor);
+    void setTexture(GLuint textId);
+    
     void setMaxVelocity(float maxVelocity);
     void setMinVelocity(float maxVelocity);
     void setPositiveAcceleration(float positiveAcceleration);
@@ -84,18 +73,21 @@ public:
     void setTurnAngle(float turnAngle);
     void setBrakingForce(float brakingForce);
     void setFriction(float friction);
+    
+    void moveBy(glm::vec3 deltaTranslation);
+    //    void moveTo(glm::vec3 translation);
+    void accelerate(bool forward); // called when w/s is pressed. increases velocity until max/min is reached
+    void brake();
+    void brakeByFriction();
     void turn(bool right);
     void rotateBy(glm::vec3 deltaRotation); // TODO> delete
 //    void rotateTo(glm::vec3 rotation); // TODO> delete
    
-    void scale(float scaleFactor);
-    
-    void setTexture(GLuint textId);
-    
+    void updateTime();
     void performTransformations();
     void draw(Shader shader);
-    
     void saveHistoryToFile(const std::string& file);
+    
      // destructor probably not needed
 //    ~Car();
 };

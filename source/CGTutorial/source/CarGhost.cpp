@@ -64,16 +64,12 @@ void CarGhost::loadHistoryFromFile(const std::string& file){
 }
 
 void CarGhost::updateCarMatrixWithHistory(double time){
-    cout << "time: " + std::to_string(time) + "\n";
-
     while(time > currentTimestamp && currentPosition < history.size()){
         previousTimestamp = currentTimestamp;
         currentPosition++;
         currentTimestamp = history[currentPosition].time;
-    }
-    
+    }    
     carModelMatrix = &history[currentPosition > 0? currentPosition - 1 : currentPosition].carMatrix;
-    cout << "carModelMatrix: " + glm::to_string(*carModelMatrix) + "\n";
 }
 
 void CarGhost::draw(Shader shader, double time){
