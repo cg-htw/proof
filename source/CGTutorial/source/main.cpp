@@ -190,9 +190,6 @@ int main()
         
         // View is set before last sendMVP()
 
-        glm::mat4 save = model;
-        model = glm::translate(model, glm::vec3(1.5, 0.0, 0.0));
-
         // Set our "myTextureSampler" sampler to user Texture Unit 0
         // TODO: vlt. notwendig mit shader statt programmID fuer die Zeitanzeige
         glUniform1i(glGetUniformLocation(programID, "myTextureSampler"), 0);
@@ -202,7 +199,6 @@ int main()
         
         sendMVP();
         
-        model = save;
         // Bind our monkey_texture in Texture Unit 0
         //glActiveTexture(GL_TEXTURE0); // because of the option to use multiple texturing it ios required to define which monkey_texture to be active.
         //glBindTexture(GL_TEXTURE_2D, monkey_texture);
