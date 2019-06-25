@@ -72,6 +72,8 @@ GLint grass_texture;
 std::vector<Object3D> streetObjects;
 Model *landscape;
 
+Camera camera( glm::vec3(0.0f, 0.0f, 3.0f) );
+
 // Function prototypes
 void error_callback( int error, const char* description );
 void key_callback( GLFWwindow* window, int key, int scancode, int action, int mods );
@@ -147,10 +149,10 @@ int main()
     glUseProgram(programID);
 
     // Setup and compile our shaders
-    shader = new Shader( "./source/res/shaders/modelLoading.vs", "./source/res/shaders/modelLoading.frag" );
+    shader = new Shader( "resources/shaders/modelLoading.vs", "resources/shaders/modelLoading.frag" );
     //shader.Use();
     
-    Shader skyboxShader( "source/res/shaders/skybox.vs", "source/res/shaders/skybox.frag" );
+    Shader skyboxShader( "resources/shaders/skybox.vs", "resources/shaders/skybox.frag" );
     
     // Load models
 
@@ -279,39 +281,8 @@ int main()
         // TODO: wahrscheinlich schlauer ausserhalb der schleife, da nur einmal yu yeichnen
         drawLevel1();
         
-        
-        //get time since game started
-        GLint64 timer;
-        glGetInteger64v(GL_TIMESTAMP, &timer);
-        timer = timer/1000000000.0;
-        //display time in window
-        std::string text = std::to_string(timer);
-        glColor3f(1, 1, 1);
-        //printf("Seconds: %s\n", text.data());
-
-        // TODO: make it work
-        //printText2D(text.data(), 10, 500, 60);
-        
-        // Draw skybox as last
-        glDepthFunc( GL_LEQUAL );  // Change depth function so depth test passes when values are equal to depth buffer's content
-        skyboxShader.Use( );
-        view = glm::mat4(glm::mat3(0.0f));    // Remove any translation component of the view matrix
-        
-        glUniformMatrix4fv( glGetUniformLocation( skyboxShader.Program, "view" ), 1, GL_FALSE, glm::value_ptr( view ) );
-        glUniformMatrix4fv( glGetUniformLocation( skyboxShader.Program, "projection" ), 1, GL_FALSE, glm::value_ptr( projection ) );
-        
-        // skybox cube
-        glBindVertexArray( skyboxVAO );
-        glBindTexture( GL_TEXTURE_CUBE_MAP, cubemapTexture );
-        glDrawArrays( GL_TRIANGLES, 0, 36 );
-        glBindVertexArray( 0 );
-        glDepthFunc( GL_LESS ); // Set depth function back to default
-
-        
         model = car1->getModelMatrix();
-    
         sendMVP();
-        //drawCube();
         car1->draw( *shader );
         
         model = carGhost->getModelMatrix();
@@ -319,7 +290,7 @@ int main()
         // TODO: anderes Model fuer ghost --> min. andere farbe, besser noch transparent
         carGhost->draw(*shader, glfwGetTime());
         
-        
+        // Set up camera
         glm::vec3 scale;
         glm::quat rotationQuat;
         glm::vec3 translation;
@@ -338,6 +309,37 @@ int main()
                            glm::vec3(0, 1, 0 )); // Head is up (set to 0,-1,0 to look upside-down
         sendMVP();
 
+     
+        //get time since game started
+        GLint64 timer;
+        glGetInteger64v(GL_TIMESTAMP, &timer);
+        timer = timer/1000000000.0;
+        //display time in window
+        std::string text = std::to_string(timer);
+        glColor3f(1, 1, 1);
+        //printf("Seconds: %s\n", text.data());
+
+        // TODO: make it work
+        //printText2D(text.data(), 10, 500, 60);
+        
+        // Draw skybox as last (at end, because view matrix is overwritten here)
+        glDepthFunc( GL_LEQUAL );  // Change depth function so depth test passes when values are equal to depth buffer's content
+        skyboxShader.Use( );
+       
+        glm::decompose(view, scale, rotationQuat, translation, skew, perspective);
+        glm::mat4 viewRotationOnly = glm::mat4(glm::toMat3(rotationQuat));
+        viewRotationOnly[1][1] *= 0.1f;
+        glUniformMatrix4fv( glGetUniformLocation( skyboxShader.Program, "view" ), 1, GL_FALSE, glm::value_ptr( viewRotationOnly ) );
+        glUniformMatrix4fv( glGetUniformLocation( skyboxShader.Program, "projection" ), 1, GL_FALSE, glm::value_ptr( projection ) );
+
+        // skybox cube
+        glBindVertexArray( skyboxVAO );
+        glBindTexture( GL_TEXTURE_CUBE_MAP, cubemapTexture );
+        glDrawArrays( GL_TRIANGLES, 0, 36 );
+        glBindVertexArray( 0 );
+        glDepthFunc( GL_LESS ); // Set depth function back to default
+        
+        
         // Swap buffers
         glfwSwapBuffers(window);
         
