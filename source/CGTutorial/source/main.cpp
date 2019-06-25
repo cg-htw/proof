@@ -67,8 +67,10 @@ CarGhost *carGhost = NULL;
 Model *streetCurveA90Model;
 Model *streetCurveB90Model;
 Model *streetStraight;
+Model *finishLine;
 GLint street_texture;
 GLint grass_texture;
+GLint finish_line_texture;
 std::vector<Object3D> streetObjects;
 Model *landscape;
 
@@ -157,9 +159,6 @@ int main()
     // Load models
 
     carModel = new Model( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
-    streetCurveA90Model = new Model( "resources/Street_and_landscape/StreetCurveA90.fbx" );
-    streetCurveB90Model = new Model( "resources/Street_and_landscape/StreetCurveB90.fbx" );
-    streetStraight = new Model( "resources/Street_and_landscape/StreetStraight.fbx" );
     
     GLfloat skyboxVertices[] = {
         // Positions
@@ -245,6 +244,7 @@ int main()
 
     street_texture = TextureFromFile("rua.jpg", "resources/Street_and_landscape");
     grass_texture = TextureFromFile("grass.jpg", "resources/Street_and_landscape");
+    finish_line_texture = TextureFromFile("finish_line_texture.jpg", "resources/Street_and_landscape");
     
     initText2D( "resources/Text2D/Holstein.DDS" );
     
@@ -317,10 +317,10 @@ int main()
         //display time in window
         std::string text = std::to_string(timer);
         glColor3f(1, 1, 1);
-        //printf("Seconds: %s\n", text.data());
+//        printf("Seconds: %s\n", text.data());
 
         // TODO: make it work
-        //printText2D(text.data(), 10, 500, 60);
+        printText2D(text.data(), 10, 500, 60);
         
         // Draw skybox as last (at end, because view matrix is overwritten here)
         glDepthFunc( GL_LEQUAL );  // Change depth function so depth test passes when values are equal to depth buffer's content
@@ -380,6 +380,10 @@ void sendMVP()
 
 void buildLevel1()
 {
+    streetCurveA90Model = new Model( "resources/Street_and_landscape/StreetCurveA90.fbx" );
+    streetCurveB90Model = new Model( "resources/Street_and_landscape/StreetCurveB90.fbx" );
+    streetStraight = new Model( "resources/Street_and_landscape/StreetStraight.fbx" );
+    finishLine = new Model( "resources/Street_and_landscape/finishLine.fbx" );
     landscape = new Model( "resources/Street_and_landscape/landscape.fbx" );
     
     // TODO auslagern in Methode Load-Level1
@@ -406,6 +410,9 @@ void buildLevel1()
     streetObjects.push_back(streetObjectCurveB90);
     streetObjects[5].rotateTo(glm::vec3(0.0, glm::radians(-180.0), 0.0));
     streetObjects[5].translateTo(glm::vec3(10.0, 0.0, -5.0));
+    
+    Object3D finishLine(finishLine);
+    streetObjects.push_back(finishLine);
 }
 
 void drawLevel1()
@@ -446,4 +453,9 @@ void drawLevel1()
     sendMVP();
     streetObjects[5].setTexture(street_texture);
     streetObjects[5].draw(*shader);
+    
+    model = streetObjects[6].getMatrix();
+    sendMVP();
+    streetObjects[6].setTexture(finish_line_texture);
+    streetObjects[6].draw(*shader);
 }

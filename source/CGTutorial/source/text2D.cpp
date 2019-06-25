@@ -19,7 +19,7 @@ unsigned int Text2DShaderID;
 unsigned int Text2DUniformID;
 
 void initText2D(const char * texturePath){
-
+    printf("entered initText2D");
 	// Initialize texture
 	Text2DTextureID = loadDDS(texturePath);
 
@@ -36,7 +36,6 @@ void initText2D(const char * texturePath){
 }
 
 void printText2D(const char * text, int x, int y, int size){
-
 	unsigned int length = strlen(text);
 
 	// Fill buffers
