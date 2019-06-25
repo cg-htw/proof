@@ -150,7 +150,7 @@ int main()
     shader = new Shader( "./source/res/shaders/modelLoading.vs", "./source/res/shaders/modelLoading.frag" );
     //shader.Use();
     
-    Shader skyboxShader( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/source/res/shaders/skybox.vs", "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/source/res/shaders/skybox.frag" );
+    Shader skyboxShader( "source/res/shaders/skybox.vs", "source/res/shaders/skybox.frag" );
     
     // Load models
 
@@ -217,12 +217,12 @@ int main()
     
     // Cubemap (Skybox)
     vector<const GLchar*> faces;
-    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_rt.jpg" );
-    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_lf.jpg" );
-    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_up.jpg" );
-    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_dn.jpg" );
-    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_bk.jpg" );
-    faces.push_back( "/Users/lucasgarbe/Documents/Uni/HTW/Semester_4/Computergrafik/proof/source/CGTutorial/resources/skybox/hills_ft.jpg" );
+    faces.push_back( "resources/skybox/hills_rt.jpg" );
+    faces.push_back( "resources/skybox/hills_lf.jpg" );
+    faces.push_back( "resources/skybox/hills_up.jpg" );
+    faces.push_back( "resources/skybox/hills_dn.jpg" );
+    faces.push_back( "resources/skybox/hills_bk.jpg" );
+    faces.push_back( "resources/skybox/hills_ft.jpg" );
     GLuint cubemapTexture = LoadCubemap(faces);
 
     buildLevel1();
