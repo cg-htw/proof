@@ -76,9 +76,14 @@ struct Checkpoint {
     Model collider;
 };
 Checkpoint *finishLine;
+std::vector<Checkpoint> checkpoints;
+std::vector<Object3D> checkpointObjects;
+
+
 
 GLint streetTexture;
 GLint finishLineTexture;
+GLint checkpointTexture;
 GLint grassTexture;
 GLuint cubemapTexture;
 GLuint transparentTexture;
@@ -384,7 +389,9 @@ void buildLevel1()
     streetTexture = TextureFromFile("rua.jpg", "resources/Street_and_landscape");
     grassTexture = TextureFromFile("grass.jpg", "resources/Street_and_landscape");
     finishLineTexture = TextureFromFile("finish_line_texture.jpg", "resources/Street_and_landscape");
+    checkpointTexture = TextureFromFile("checkpoint_texture.jpg", "resources/Street_and_landscape");
     transparentTexture = TextureFromFile("empty.png", "resources/Street_and_landscape");
+    
     
     carModel = new Model( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
     streetCurveA90Model = new Model( "resources/Street_and_landscape/StreetCurveA90.fbx" );
@@ -392,9 +399,15 @@ void buildLevel1()
     streetStraightModel = new Model( "resources/Street_and_landscape/StreetStraight.fbx" );
     landscapeModel = new Model( "resources/Street_and_landscape/landscape.fbx" );
     printf("got here");
-    Model finishLineModel( "resources/Street_and_landscape/finish_line.fbx" );
+    Model finishLineModel( "resources/Street_and_landscape/finish_line2.fbx" );
     Model finishLineColliderModel( "resources/Street_and_landscape/collider_invisible.fbx" ); // collider_invisible.fbx had setting Object Display/Visibility set to true, which is probably not included
     finishLine = new Checkpoint({finishLineModel, finishLineColliderModel});
+    Model checkpointeModel( "resources/Street_and_landscape/checkpoint.fbx" );
+    Model checkpointColliderModel( "resources/Street_and_landscape/collider_invisible.fbx" ); // collider_invisible.fbx had setting Object Display/Visibility set to true, which is probably not included
+    Checkpoint checkpoint({finishLineModel, finishLineColliderModel});
+    checkpoints.push_back(checkpoint);
+    
+    
     
     buildSkymap();
     
@@ -430,6 +443,11 @@ void buildLevel1()
     // ..and for the corresponding collider // TODO: delete, if not necessary
     Object3D finishLineColliderObject(finishLine->collider);
     streetObjects.push_back(finishLineColliderObject);
+    
+    Object3D checkpointObject(checkpoint.actualModel);
+    checkpointObjects.push_back(checkpointObject);
+    checkpointObjects[0].translateTo(glm::vec3(0.0, 0.0, 10.0));
+    
 }
 
 void drawLevel1()
@@ -476,9 +494,14 @@ void drawLevel1()
     streetObjects[6].setTexture(finishLineTexture);
     streetObjects[6].draw(*shader);
     // maybe no need to draw the collider, wenn doch, ein groesseres Thema. Wahrscheinlich entweder ueber z Buffer zu lösen.
-    model = streetObjects[7].getMatrix();
+//    model = streetObjects[7].getMatrix();
+//    sendMVP();
+//    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE); // makes the collider, but also all moving objects behind the collider invisible
+//    streetObjects[7].draw(*shader);
+//    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    
+    model = checkpointObjects[0].getMatrix();
     sendMVP();
-    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE); // makes the collider, but also all moving objects behind the collider invisible
-    streetObjects[7].draw(*shader);
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    checkpointObjects[0].setTexture(checkpointTexture);
+    checkpointObjects[0].draw(*shader);
 }
