@@ -74,10 +74,10 @@ std::vector<Object3D> streetObjects;
 struct Checkpoint {
     Model actualModel;
     Model collider;
+    Object3D checkpointObject;
+    Object3D colliderObject;
 };
-Checkpoint *finishLine;
 std::vector<Checkpoint> checkpoints;
-std::vector<Object3D> checkpointObjects;
 
 
 
@@ -318,6 +318,7 @@ void sendMVP()
 
 void buildSkymap()
 {
+    landscapeModel = new Model( "resources/Street_and_landscape/landscape.fbx" );
     GLfloat skyboxVertices[] = {
         // Positions
         -1.0f,  1.0f, -1.0f,
@@ -386,30 +387,18 @@ void buildSkymap()
 
 void buildLevel1()
 {
+    buildSkymap();
+
     streetTexture = TextureFromFile("rua.jpg", "resources/Street_and_landscape");
     grassTexture = TextureFromFile("grass.jpg", "resources/Street_and_landscape");
     finishLineTexture = TextureFromFile("finish_line_texture.jpg", "resources/Street_and_landscape");
-    checkpointTexture = TextureFromFile("checkpoint_texture.jpg", "resources/Street_and_landscape");
-    transparentTexture = TextureFromFile("empty.png", "resources/Street_and_landscape");
-    
+    checkpointTexture = TextureFromFile("checkpoint_texture2.png", "resources/Street_and_landscape");
+//    transparentTexture = TextureFromFile("empty.png", "resources/Street_and_landscape");
     
     carModel = new Model( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
     streetCurveA90Model = new Model( "resources/Street_and_landscape/StreetCurveA90.fbx" );
     streetCurveB90Model = new Model( "resources/Street_and_landscape/StreetCurveB90.fbx" );
     streetStraightModel = new Model( "resources/Street_and_landscape/StreetStraight.fbx" );
-    landscapeModel = new Model( "resources/Street_and_landscape/landscape.fbx" );
-    printf("got here");
-    Model finishLineModel( "resources/Street_and_landscape/finish_line2.fbx" );
-    Model finishLineColliderModel( "resources/Street_and_landscape/collider_invisible.fbx" ); // collider_invisible.fbx had setting Object Display/Visibility set to true, which is probably not included
-    finishLine = new Checkpoint({finishLineModel, finishLineColliderModel});
-    Model checkpointeModel( "resources/Street_and_landscape/checkpoint.fbx" );
-    Model checkpointColliderModel( "resources/Street_and_landscape/collider_invisible.fbx" ); // collider_invisible.fbx had setting Object Display/Visibility set to true, which is probably not included
-    Checkpoint checkpoint({finishLineModel, finishLineColliderModel});
-    checkpoints.push_back(checkpoint);
-    
-    
-    
-    buildSkymap();
     
     // TODO auslagern in Methode Load-Level1
     Object3D streetObjectStraight(*streetStraightModel);
@@ -436,17 +425,24 @@ void buildLevel1()
     streetObjects[5].rotateTo(glm::vec3(0.0, glm::radians(-180.0), 0.0));
     streetObjects[5].translateTo(glm::vec3(10.0, 0.0, -5.0));
     
-    // TODO: evt besser woanders als in streetObjects, z.b. in einem array checkpoints speichern.
-    Object3D finishLineObject(finishLine->actualModel);
-    streetObjects.push_back(finishLineObject);
-    streetObjects[6].translateTo(glm::vec3(0.0, 0.01, 0.0));
-    // ..and for the corresponding collider // TODO: delete, if not necessary
-    Object3D finishLineColliderObject(finishLine->collider);
-    streetObjects.push_back(finishLineColliderObject);
     
-    Object3D checkpointObject(checkpoint.actualModel);
-    checkpointObjects.push_back(checkpointObject);
-    checkpointObjects[0].translateTo(glm::vec3(0.0, 0.0, 10.0));
+    // Build finish line and save in checkpoints[0]
+    Model finishLineModel( "resources/Street_and_landscape/finish_line2.fbx" );
+    Model finishLineColliderModel( "resources/Street_and_landscape/collider.fbx" ); // collider_invisible.fbx had setting Object Display/Visibility set to true, which is probably not included
+    Object3D finishLineObject(finishLineModel);
+    Object3D finishLineColliderObject(finishLineColliderModel);
+    Checkpoint finishLine({finishLineModel, finishLineColliderModel, finishLineObject, finishLineColliderObject});
+    checkpoints.push_back(finishLine);
+    
+    // Build checkpoint and save in checkpoints[1]
+    Model checkpointModel( "resources/Street_and_landscape/checkpoint.fbx" );
+    Model checkpointColliderModel( "resources/Street_and_landscape/checkpoint_collider.fbx" ); // collider_invisible.fbx had setting Object Display/Visibility set to true, which is probably not included
+    Object3D checkpointObject(checkpointModel);
+    checkpointObject.translateTo(glm::vec3(0.0, 0.0, 10.0));
+    Object3D checkpointColliderObject(checkpointColliderModel);
+    checkpointColliderObject.translateTo(glm::vec3(0.0, 0.0, 10.0));
+    Checkpoint checkpoint({checkpointModel, checkpointColliderModel, checkpointObject, checkpointColliderObject});
+    checkpoints.push_back(checkpoint);
     
 }
 
@@ -489,19 +485,19 @@ void drawLevel1()
     streetObjects[5].setTexture(streetTexture);
     streetObjects[5].draw(*shader);
     
-    model = streetObjects[6].getMatrix();
+    model = checkpoints[0].checkpointObject.getMatrix();
     sendMVP();
-    streetObjects[6].setTexture(finishLineTexture);
-    streetObjects[6].draw(*shader);
+    checkpoints[0].checkpointObject.setTexture(finishLineTexture);
+    checkpoints[0].checkpointObject.draw(*shader);
     // maybe no need to draw the collider, wenn doch, ein groesseres Thema. Wahrscheinlich entweder ueber z Buffer zu lösen.
-//    model = streetObjects[7].getMatrix();
+//    model = checkpoints[0].checkpointObject.getMatrix();
 //    sendMVP();
 //    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE); // makes the collider, but also all moving objects behind the collider invisible
-//    streetObjects[7].draw(*shader);
+//    checkpoints[0].checkpointObject.draw(*shader);
 //    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     
-    model = checkpointObjects[0].getMatrix();
+    model = checkpoints[1].checkpointObject.getMatrix();
     sendMVP();
-    checkpointObjects[0].setTexture(checkpointTexture);
-    checkpointObjects[0].draw(*shader);
+    checkpoints[1].checkpointObject.setTexture(checkpointTexture);
+    checkpoints[1].checkpointObject.draw(*shader);
 }
