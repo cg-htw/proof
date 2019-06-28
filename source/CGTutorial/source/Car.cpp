@@ -166,16 +166,24 @@ void Car::draw(Shader shader)
 
 // TODO: Auslagern
 // TODO: nicht jeden frame speichern
-void Car::saveHistoryToFile(const std::string& file)
+void Car::saveHistoryToFile(const std::string& file, float timestamps[], int sizeTimestamps)
 {
     ofstream fOut (file);
     // equivalent to: ofstream fOut; fOut.open (file);
     
     if (fOut.is_open()) {
         /* ok, proceed with output */
-        printf("Saving to: ");
+        cout << "\nSaving " << file << " at: \n";
         system("pwd");
-        printf("\n");
+        // Print timestamps
+        fOut << "timestamps {\n";
+        for(int i = 0; i < sizeTimestamps; i++){
+            fOut << "Lap " << i+1 << ": " << timestamps[i] << ",\n";
+        }
+        fOut << "}\n";
+        
+        // Print History
+        fOut << "history {\n";
         for(int i = 0; i < history.size(); i++){
             fOut << history.at(i).time;
             fOut << " : ";
@@ -183,9 +191,11 @@ void Car::saveHistoryToFile(const std::string& file)
             std::string matrix = to_string(history.at(i).carMatrix).erase(0, 6);
             // TODO: make it work
             fOut << matrix << std::endl;
-            fOut << "\n";
+            fOut << ",\n";
         }
+        fOut << "}\n";
+        
         fOut.close();
-    } else cout << "Unable to open file";
+    } else cout << "saveHistoryToFile: Unable to open file\n";
 }
 

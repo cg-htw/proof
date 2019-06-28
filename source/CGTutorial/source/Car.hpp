@@ -86,7 +86,7 @@ public:
     void updateTime();
     void performTransformations();
     void draw(Shader shader);
-    void saveHistoryToFile(const std::string& file);
+    void saveHistoryToFile(const std::string& file, float timestamps[], int sizeTimestamps);
     
      // destructor probably not needed
 //    ~Car();

@@ -9,7 +9,9 @@
 
 #include <stdio.h>
 
+#include "Constants.h"
 #include "Car.hpp"
+
 
 class CarGhost
 {
@@ -19,11 +21,13 @@ class CarGhost
     int currentPosition;
     double previousTimestamp;
     double currentTimestamp;
-
+    std::vector<float> recordTimestamps;
+    
 public:
     CarGhost(const std::string& file, Model carModel); // evt das Model übergeben
     glm::mat4 getModelMatrix();
-    void loadHistoryFromFile(const std::string& file);
+    void readRecordFile(const std::string& file);
     void updateCarMatrixWithHistory(double time);
     void draw(Shader shader, double time);
+    std::vector<float> getRecordTimestamps();
 };

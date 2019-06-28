@@ -15,6 +15,7 @@
 #include "Camera.h"
 #include "Model.hpp"
 
+#include "Constants.h"
 #include "Object3D.h"
 #include "Car.hpp"
 #include "CarGhost.hpp"
@@ -62,6 +63,7 @@ Car *car1;
 //Car *car2;
 Model *carModel;
 CarGhost *carGhost = NULL;
+std::vector<float> recordTimestamps;
 #include "Input.hpp"
 
 Model *streetCurveA90Model;
@@ -77,9 +79,8 @@ struct Checkpoint {
     double areaXZ[4]; // x0, x1, z0, z1
 };
 std::vector<Checkpoint> checkpoints;
-const int LAPS = 3;
 int currentLap;
-float timeFinished;
+float timestamps[LAPS];
 
 
 GLint streetTexture;
@@ -183,11 +184,12 @@ int main()
     car1->rotateBy(glm::vec3(glm::radians(-90.0), 0.0, glm::radians(90.0)));
     car1->moveBy(glm::vec3(-3.0, 2.0, 2.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
     
-    carGhost = new CarGhost("lastRide.txt", *carModel);
+    carGhost = new CarGhost("record.txt", *carModel);
+    recordTimestamps = carGhost->getRecordTimestamps();
     
     buildLevel1();
     
-    initText2D( "resources/Text2D/Holstein.DDS" );
+//    initText2D( "resources/Text2D/Holstein.DDS" );
     
     
     // Eventloop
@@ -294,8 +296,12 @@ int main()
         glfwPollEvents();
         reactOnPressedKeys();
     }
-    
-    car1->saveHistoryToFile("lastRide.txt");
+
+    if(timestamps[LAPS-1] > 0 && (recordTimestamps.size() == 0 || recordTimestamps.at(LAPS-1) == 0 || timestamps[LAPS-1] < recordTimestamps.at(LAPS-1)))
+    {
+        cout << "*** NEW RECORD!!! ***\n";
+        car1->saveHistoryToFile("record.txt", timestamps, LAPS);
+    }
     
     glDeleteProgram(programID);
     
@@ -513,12 +519,14 @@ void checkpointCollisionDetection(){
            translation.z >= checkpoints[i].areaXZ[2] && translation.z <= checkpoints[i].areaXZ[3]){
             if(checkpoints[i>0? i-1 : checkpoints.size()-1].passed == true) // if predecessor is passed
             {
+                float currentTime = glfwGetTime();
                 if(i == 0){
+                    timestamps[currentLap] = currentTime;
                     currentLap++;
                     checkpoints[checkpoints.size()-1].passed = false;
                     if(currentLap == LAPS)
                     {
-                        timeFinished = glfwGetTime();
+//                        timestamps[LAPS-1] = glfwGetTime();
                         printf("***** FINISHED! *****\n");
                     } else {
                         printf("Lap %d / %d \n", currentLap, LAPS);
@@ -529,7 +537,25 @@ void checkpointCollisionDetection(){
                     checkpoints[i-1].passed = false;
                 }
                 checkpoints[i].passed = true;
-                printf("%02d:%.2f \n", (int) glfwGetTime()/60, timeFinished? timeFinished : std::fmod(glfwGetTime(), 60.0f));
+                unsigned int min = currentTime/60;
+                unsigned int sec = std::fmod(currentTime, 60.0f);
+                unsigned int mil = 100 * std::fmod(currentTime, 1.0f); //100 * (currentTime - (int) currentTime);
+                printf("%02d:%02d:%02d ", min, sec, mil);
+                
+                // TODO: Time difference
+//                if(recordTimestamps.size() >= currentLap && i == 0 ){
+//                    float deltaTime = recordTimestamps.at(i) - currentTime;
+//                    cout << deltaTime << "\n";
+//
+//                    char sign = deltaTime > 0? '-' : '+';
+//                    min = deltaTime/60;
+//                    sec = std::fmod(deltaTime, 60.0f);
+////                    cout << sec << "\n";
+//                    mil = 100 * std::fmod(currentTime, 60.0f); //100 * (deltaTime - (int) deltaTime);
+////                    cout << mil << "\n";
+//                    printf("(%c%02d:%02d:%02d)", sign, min, sec, mil);
+//                }
+                cout << "\n";
             }
         }
     }

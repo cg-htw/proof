@@ -64,6 +64,7 @@
 		185817ED22C6043300B5F492 /* libBulletInverseDynamicsUtils.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletInverseDynamicsUtils.2.88.dylib; path = source/common/external/libs/libBulletInverseDynamicsUtils.2.88.dylib; sourceTree = "<group>"; };
 		185817EE22C6043300B5F492 /* libBulletInverseDynamics.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletInverseDynamics.2.88.dylib; path = source/common/external/libs/libBulletInverseDynamics.2.88.dylib; sourceTree = "<group>"; };
 		185817EF22C6043300B5F492 /* libGIMPACTUtils.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGIMPACTUtils.2.88.dylib; path = source/common/external/libs/libGIMPACTUtils.2.88.dylib; sourceTree = "<group>"; };
+		185817FA22C6546300B5F492 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		188478E522B8EEE80028395A /* CarGhost.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CarGhost.cpp; sourceTree = "<group>"; };
 		188478E622B8EEE80028395A /* CarGhost.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CarGhost.hpp; sourceTree = "<group>"; };
 		18938D7822AFBC680012FC3C /* Car.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Car.cpp; sourceTree = "<group>"; };
@@ -199,6 +200,7 @@
 				18B46BC422B69DDC000D3444 /* Input.hpp */,
 				188478E522B8EEE80028395A /* CarGhost.cpp */,
 				188478E622B8EEE80028395A /* CarGhost.hpp */,
+				185817FA22C6546300B5F492 /* Constants.h */,
 			);
 			path = source;
 			sourceTree = "<group>";
