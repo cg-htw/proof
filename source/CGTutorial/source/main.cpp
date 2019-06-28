@@ -542,19 +542,10 @@ void checkpointCollisionDetection(){
                 unsigned int mil = 100 * std::fmod(currentTime, 1.0f); //100 * (currentTime - (int) currentTime);
                 printf("%02d:%02d:%02d ", min, sec, mil);
                 
-                // TODO: Time difference
-//                if(recordTimestamps.size() >= currentLap && i == 0 ){
-//                    float deltaTime = recordTimestamps.at(i) - currentTime;
-//                    cout << deltaTime << "\n";
-//
-//                    char sign = deltaTime > 0? '-' : '+';
-//                    min = deltaTime/60;
-//                    sec = std::fmod(deltaTime, 60.0f);
-////                    cout << sec << "\n";
-//                    mil = 100 * std::fmod(currentTime, 60.0f); //100 * (deltaTime - (int) deltaTime);
-////                    cout << mil << "\n";
-//                    printf("(%c%02d:%02d:%02d)", sign, min, sec, mil);
-//                }
+                if(recordTimestamps.size() >= currentLap && i == 0 ){
+                    float deltaTime = currentTime - recordTimestamps.at(i);
+                    printf("(%+2.2fs)", deltaTime);
+                }
                 cout << "\n";
             }
         }
