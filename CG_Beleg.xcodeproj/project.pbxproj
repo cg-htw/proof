@@ -10,6 +10,24 @@
 		182095B222B8F504004552BB /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 182095B122B8F504004552BB /* libGLEW.2.1.0.dylib */; };
 		182095B422B8F572004552BB /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 182095B322B8F572004552BB /* libglfw.3.3.dylib */; };
 		1836057122AFE5A400423251 /* text2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1836056F22AFE5A400423251 /* text2D.cpp */; };
+		185817D722C5F89900B5F492 /* libBullet3Collision.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817D622C5F89900B5F492 /* libBullet3Collision.2.88.dylib */; };
+		185817D922C601FB00B5F492 /* libBulletDynamics.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817D822C601FB00B5F492 /* libBulletDynamics.2.88.dylib */; };
+		185817DB22C602EA00B5F492 /* libBullet3Common.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817DA22C602E900B5F492 /* libBullet3Common.2.88.dylib */; };
+		185817DD22C6030000B5F492 /* libBullet3Dynamics.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817DC22C6030000B5F492 /* libBullet3Dynamics.2.88.dylib */; };
+		185817DF22C6030C00B5F492 /* libBullet3Geometry.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817DE22C6030C00B5F492 /* libBullet3Geometry.2.88.dylib */; };
+		185817E122C6031500B5F492 /* libBullet3OpenCL_clew.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817E022C6031500B5F492 /* libBullet3OpenCL_clew.2.88.dylib */; };
+		185817E322C603BA00B5F492 /* libBulletCollision.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817E222C603B900B5F492 /* libBulletCollision.2.88.dylib */; };
+		185817E522C6042700B5F492 /* libBulletFileLoader.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817E422C6042700B5F492 /* libBulletFileLoader.2.88.dylib */; };
+		185817F022C6043400B5F492 /* libBulletWorldImporter.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817E622C6043300B5F492 /* libBulletWorldImporter.2.88.dylib */; };
+		185817F122C6043400B5F492 /* libHACD.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817E722C6043300B5F492 /* libHACD.2.88.dylib */; };
+		185817F222C6043400B5F492 /* libBulletSoftBody.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817E822C6043300B5F492 /* libBulletSoftBody.2.88.dylib */; };
+		185817F322C6043400B5F492 /* libBulletXmlWorldImporter.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817E922C6043300B5F492 /* libBulletXmlWorldImporter.2.88.dylib */; };
+		185817F422C6043400B5F492 /* libConvexDecomposition.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817EA22C6043300B5F492 /* libConvexDecomposition.2.88.dylib */; };
+		185817F522C6043400B5F492 /* libBulletRobotics.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817EB22C6043300B5F492 /* libBulletRobotics.2.88.dylib */; };
+		185817F622C6043400B5F492 /* libLinearMath.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817EC22C6043300B5F492 /* libLinearMath.2.88.dylib */; };
+		185817F722C6043400B5F492 /* libBulletInverseDynamicsUtils.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817ED22C6043300B5F492 /* libBulletInverseDynamicsUtils.2.88.dylib */; };
+		185817F822C6043400B5F492 /* libBulletInverseDynamics.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817EE22C6043300B5F492 /* libBulletInverseDynamics.2.88.dylib */; };
+		185817F922C6043400B5F492 /* libGIMPACTUtils.2.88.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185817EF22C6043300B5F492 /* libGIMPACTUtils.2.88.dylib */; };
 		188478E722B8EEE80028395A /* CarGhost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 188478E522B8EEE80028395A /* CarGhost.cpp */; };
 		18938D7A22AFBC680012FC3C /* Car.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18938D7822AFBC680012FC3C /* Car.cpp */; };
 		18938D7E22AFC2A40012FC3C /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18938D7C22AFC2A40012FC3C /* Model.cpp */; };
@@ -46,6 +64,24 @@
 		1836056D22AFDEAB00423251 /* libglut.3.10.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglut.3.10.0.dylib; path = source/common/external/libs/libglut.3.10.0.dylib; sourceTree = "<group>"; };
 		1836056F22AFE5A400423251 /* text2D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = text2D.cpp; sourceTree = "<group>"; };
 		1836057022AFE5A400423251 /* text2D.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = text2D.hpp; sourceTree = "<group>"; };
+		185817D622C5F89900B5F492 /* libBullet3Collision.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBullet3Collision.2.88.dylib; path = source/common/external/libs/libBullet3Collision.2.88.dylib; sourceTree = "<group>"; };
+		185817D822C601FB00B5F492 /* libBulletDynamics.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletDynamics.2.88.dylib; path = source/common/external/libs/libBulletDynamics.2.88.dylib; sourceTree = "<group>"; };
+		185817DA22C602E900B5F492 /* libBullet3Common.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBullet3Common.2.88.dylib; path = source/common/external/libs/libBullet3Common.2.88.dylib; sourceTree = "<group>"; };
+		185817DC22C6030000B5F492 /* libBullet3Dynamics.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBullet3Dynamics.2.88.dylib; path = source/common/external/libs/libBullet3Dynamics.2.88.dylib; sourceTree = "<group>"; };
+		185817DE22C6030C00B5F492 /* libBullet3Geometry.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBullet3Geometry.2.88.dylib; path = source/common/external/libs/libBullet3Geometry.2.88.dylib; sourceTree = "<group>"; };
+		185817E022C6031500B5F492 /* libBullet3OpenCL_clew.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBullet3OpenCL_clew.2.88.dylib; path = source/common/external/libs/libBullet3OpenCL_clew.2.88.dylib; sourceTree = "<group>"; };
+		185817E222C603B900B5F492 /* libBulletCollision.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletCollision.2.88.dylib; path = source/common/external/libs/libBulletCollision.2.88.dylib; sourceTree = "<group>"; };
+		185817E422C6042700B5F492 /* libBulletFileLoader.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletFileLoader.2.88.dylib; path = source/common/external/libs/libBulletFileLoader.2.88.dylib; sourceTree = "<group>"; };
+		185817E622C6043300B5F492 /* libBulletWorldImporter.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletWorldImporter.2.88.dylib; path = source/common/external/libs/libBulletWorldImporter.2.88.dylib; sourceTree = "<group>"; };
+		185817E722C6043300B5F492 /* libHACD.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libHACD.2.88.dylib; path = source/common/external/libs/libHACD.2.88.dylib; sourceTree = "<group>"; };
+		185817E822C6043300B5F492 /* libBulletSoftBody.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletSoftBody.2.88.dylib; path = source/common/external/libs/libBulletSoftBody.2.88.dylib; sourceTree = "<group>"; };
+		185817E922C6043300B5F492 /* libBulletXmlWorldImporter.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletXmlWorldImporter.2.88.dylib; path = source/common/external/libs/libBulletXmlWorldImporter.2.88.dylib; sourceTree = "<group>"; };
+		185817EA22C6043300B5F492 /* libConvexDecomposition.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libConvexDecomposition.2.88.dylib; path = source/common/external/libs/libConvexDecomposition.2.88.dylib; sourceTree = "<group>"; };
+		185817EB22C6043300B5F492 /* libBulletRobotics.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletRobotics.2.88.dylib; path = source/common/external/libs/libBulletRobotics.2.88.dylib; sourceTree = "<group>"; };
+		185817EC22C6043300B5F492 /* libLinearMath.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libLinearMath.2.88.dylib; path = source/common/external/libs/libLinearMath.2.88.dylib; sourceTree = "<group>"; };
+		185817ED22C6043300B5F492 /* libBulletInverseDynamicsUtils.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletInverseDynamicsUtils.2.88.dylib; path = source/common/external/libs/libBulletInverseDynamicsUtils.2.88.dylib; sourceTree = "<group>"; };
+		185817EE22C6043300B5F492 /* libBulletInverseDynamics.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletInverseDynamics.2.88.dylib; path = source/common/external/libs/libBulletInverseDynamics.2.88.dylib; sourceTree = "<group>"; };
+		185817EF22C6043300B5F492 /* libGIMPACTUtils.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGIMPACTUtils.2.88.dylib; path = source/common/external/libs/libGIMPACTUtils.2.88.dylib; sourceTree = "<group>"; };
 		188478E522B8EEE80028395A /* CarGhost.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CarGhost.cpp; sourceTree = "<group>"; };
 		188478E622B8EEE80028395A /* CarGhost.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CarGhost.hpp; sourceTree = "<group>"; };
 		18938D7822AFBC680012FC3C /* Car.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Car.cpp; sourceTree = "<group>"; };
@@ -83,6 +119,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				185817D922C601FB00B5F492 /* libBulletDynamics.2.88.dylib in Frameworks */,
+				185817E322C603BA00B5F492 /* libBulletCollision.2.88.dylib in Frameworks */,
+				185817E522C6042700B5F492 /* libBulletFileLoader.2.88.dylib in Frameworks */,
+				185817F822C6043400B5F492 /* libBulletInverseDynamics.2.88.dylib in Frameworks */,
+				185817F722C6043400B5F492 /* libBulletInverseDynamicsUtils.2.88.dylib in Frameworks */,
+				185817F522C6043400B5F492 /* libBulletRobotics.2.88.dylib in Frameworks */,
+				185817F222C6043400B5F492 /* libBulletSoftBody.2.88.dylib in Frameworks */,
+				185817F022C6043400B5F492 /* libBulletWorldImporter.2.88.dylib in Frameworks */,
+				185817F322C6043400B5F492 /* libBulletXmlWorldImporter.2.88.dylib in Frameworks */,
+				185817F422C6043400B5F492 /* libConvexDecomposition.2.88.dylib in Frameworks */,
+				185817F922C6043400B5F492 /* libGIMPACTUtils.2.88.dylib in Frameworks */,
+				185817F122C6043400B5F492 /* libHACD.2.88.dylib in Frameworks */,
+				185817F622C6043400B5F492 /* libLinearMath.2.88.dylib in Frameworks */,
+				185817D722C5F89900B5F492 /* libBullet3Collision.2.88.dylib in Frameworks */,
+				185817DB22C602EA00B5F492 /* libBullet3Common.2.88.dylib in Frameworks */,
+				185817DD22C6030000B5F492 /* libBullet3Dynamics.2.88.dylib in Frameworks */,
+				185817DF22C6030C00B5F492 /* libBullet3Geometry.2.88.dylib in Frameworks */,
+				185817E122C6031500B5F492 /* libBullet3OpenCL_clew.2.88.dylib in Frameworks */,
 				182095B422B8F572004552BB /* libglfw.3.3.dylib in Frameworks */,
 				182095B222B8F504004552BB /* libGLEW.2.1.0.dylib in Frameworks */,
 				18D8A0C0229C63CC000B2709 /* libsoil2-debug.a in Frameworks */,
@@ -100,6 +154,24 @@
 		185840F3229C598300848119 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				185817EE22C6043300B5F492 /* libBulletInverseDynamics.2.88.dylib */,
+				185817ED22C6043300B5F492 /* libBulletInverseDynamicsUtils.2.88.dylib */,
+				185817EB22C6043300B5F492 /* libBulletRobotics.2.88.dylib */,
+				185817E822C6043300B5F492 /* libBulletSoftBody.2.88.dylib */,
+				185817E622C6043300B5F492 /* libBulletWorldImporter.2.88.dylib */,
+				185817E922C6043300B5F492 /* libBulletXmlWorldImporter.2.88.dylib */,
+				185817EA22C6043300B5F492 /* libConvexDecomposition.2.88.dylib */,
+				185817EF22C6043300B5F492 /* libGIMPACTUtils.2.88.dylib */,
+				185817E722C6043300B5F492 /* libHACD.2.88.dylib */,
+				185817EC22C6043300B5F492 /* libLinearMath.2.88.dylib */,
+				185817E422C6042700B5F492 /* libBulletFileLoader.2.88.dylib */,
+				185817E222C603B900B5F492 /* libBulletCollision.2.88.dylib */,
+				185817E022C6031500B5F492 /* libBullet3OpenCL_clew.2.88.dylib */,
+				185817DE22C6030C00B5F492 /* libBullet3Geometry.2.88.dylib */,
+				185817DC22C6030000B5F492 /* libBullet3Dynamics.2.88.dylib */,
+				185817DA22C602E900B5F492 /* libBullet3Common.2.88.dylib */,
+				185817D822C601FB00B5F492 /* libBulletDynamics.2.88.dylib */,
+				185817D622C5F89900B5F492 /* libBullet3Collision.2.88.dylib */,
 				182095B322B8F572004552BB /* libglfw.3.3.dylib */,
 				182095B122B8F504004552BB /* libGLEW.2.1.0.dylib */,
 				1836056D22AFDEAB00423251 /* libglut.3.10.0.dylib */,

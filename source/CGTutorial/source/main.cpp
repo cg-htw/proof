@@ -42,6 +42,10 @@ using namespace glm;
 
 #include "text2D.hpp"
 
+// Collision detection
+//#include <btBulletDynamicsCommon.h>
+
+
 // TODO remove unused imports
 
 
@@ -72,13 +76,17 @@ std::vector<Object3D> streetObjects;
 
 // A finish line is a checkpoint
 struct Checkpoint {
-    Model actualModel;
-    Model collider;
     Object3D checkpointObject;
-    Object3D colliderObject;
+    bool passed;
+//    btCollisionObject collisionObject;
+    double areaXZ[4]; // x0, x1, z0, z1
 };
 std::vector<Checkpoint> checkpoints;
-
+//btDiscreteDynamicsWorld* dynamicsWorld;
+//btCollisionObject* carCollider;
+const int LAPS = 3;
+int currentLap;
+float timeFinished;
 
 
 GLint streetTexture;
@@ -92,6 +100,8 @@ GLuint skyboxVAO, skyboxVBO;
 
 Camera camera( glm::vec3(0.0f, 0.0f, 3.0f) );
 
+
+
 // Function prototypes
 void error_callback( int error, const char* description );
 void key_callback( GLFWwindow* window, int key, int scancode, int action, int mods );
@@ -99,6 +109,10 @@ void key_callback( GLFWwindow* window, int key, int scancode, int action, int mo
 void sendMVP();
 void buildLevel1();
 void drawLevel1();
+//void createDynamicsWorld();
+//btCollisionObject* createCollisionObject(glm::mat4 objectModelMatrix);
+void checkpointCollisionDetection();
+
 
 int main()
 {
@@ -172,17 +186,18 @@ int main()
     
     Shader skyboxShader( "resources/shaders/skybox.vs", "resources/shaders/skybox.frag" );
     
-    
-    
-    buildLevel1();
-    
-    
+    carModel = new Model( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
     car1 = new Car(*carModel, 2000.0f);
     car1->scale(1.0/13.5);
     car1->rotateBy(glm::vec3(glm::radians(-90.0), 0.0, glm::radians(90.0)));
     car1->moveBy(glm::vec3(-3.0, 2.0, 2.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
     
     carGhost = new CarGhost("lastRide.txt", *carModel);
+    
+    
+//    createDynamicsWorld();
+//    carCollider = createCollisionObject(car1->getModelMatrix());
+    buildLevel1();
     
     initText2D( "resources/Text2D/Holstein.DDS" );
     
@@ -277,6 +292,18 @@ int main()
         glBindVertexArray( 0 );
         glDepthFunc( GL_LESS ); // Set depth function back to default
         
+//        btTransform updateWorld;
+//        updateWorld.setIdentity();
+        glm::mat4 carModelMatrix = car1->getModelMatrix();
+        glm::decompose(carModelMatrix, scale, rotationQuat, translation, skew, perspective);
+//        updateWorld.setOrigin(btVector3(translation.x, translation.y, translation.z));
+//        carCollider->setWorldTransform(updateWorld);
+        
+//        dynamicsWorld->removeCollisionObject(carCollider);
+//        carCollider = createCollisionObject(car1->getModelMatrix());
+        
+        if(currentLap < LAPS)
+           checkpointCollisionDetection();
         
         // Swap buffers
         glfwSwapBuffers(window);
@@ -395,7 +422,6 @@ void buildLevel1()
     checkpointTexture = TextureFromFile("checkpoint_texture2.png", "resources/Street_and_landscape");
 //    transparentTexture = TextureFromFile("empty.png", "resources/Street_and_landscape");
     
-    carModel = new Model( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
     streetCurveA90Model = new Model( "resources/Street_and_landscape/StreetCurveA90.fbx" );
     streetCurveB90Model = new Model( "resources/Street_and_landscape/StreetCurveB90.fbx" );
     streetStraightModel = new Model( "resources/Street_and_landscape/StreetStraight.fbx" );
@@ -428,20 +454,16 @@ void buildLevel1()
     
     // Build finish line and save in checkpoints[0]
     Model finishLineModel( "resources/Street_and_landscape/finish_line2.fbx" );
-    Model finishLineColliderModel( "resources/Street_and_landscape/collider.fbx" ); // collider_invisible.fbx had setting Object Display/Visibility set to true, which is probably not included
     Object3D finishLineObject(finishLineModel);
-    Object3D finishLineColliderObject(finishLineColliderModel);
-    Checkpoint finishLine({finishLineModel, finishLineColliderModel, finishLineObject, finishLineColliderObject});
+    Checkpoint finishLine({finishLineObject, true, /* *createCollisionObject(finishLineObject.getMatrix()),*/ {-0.5, 0.5, -1.0, 1.0}});
     checkpoints.push_back(finishLine);
     
     // Build checkpoint and save in checkpoints[1]
     Model checkpointModel( "resources/Street_and_landscape/checkpoint.fbx" );
-    Model checkpointColliderModel( "resources/Street_and_landscape/checkpoint_collider.fbx" ); // collider_invisible.fbx had setting Object Display/Visibility set to true, which is probably not included
     Object3D checkpointObject(checkpointModel);
     checkpointObject.translateTo(glm::vec3(0.0, 0.0, 10.0));
-    Object3D checkpointColliderObject(checkpointColliderModel);
-    checkpointColliderObject.translateTo(glm::vec3(0.0, 0.0, 10.0));
-    Checkpoint checkpoint({checkpointModel, checkpointColliderModel, checkpointObject, checkpointColliderObject});
+    Checkpoint checkpoint({checkpointObject, false,/* *createCollisionObject(checkpointObject.getMatrix()),*/ {-0.25, 0.25, 9.0, 11}});
+
     checkpoints.push_back(checkpoint);
     
 }
@@ -489,15 +511,96 @@ void drawLevel1()
     sendMVP();
     checkpoints[0].checkpointObject.setTexture(finishLineTexture);
     checkpoints[0].checkpointObject.draw(*shader);
-    // maybe no need to draw the collider, wenn doch, ein groesseres Thema. Wahrscheinlich entweder ueber z Buffer zu lösen.
-//    model = checkpoints[0].checkpointObject.getMatrix();
-//    sendMVP();
-//    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE); // makes the collider, but also all moving objects behind the collider invisible
-//    checkpoints[0].checkpointObject.draw(*shader);
-//    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    
+   
     model = checkpoints[1].checkpointObject.getMatrix();
     sendMVP();
     checkpoints[1].checkpointObject.setTexture(checkpointTexture);
     checkpoints[1].checkpointObject.draw(*shader);
+}
+
+//void createDynamicsWorld(){
+//    btDefaultCollisionConfiguration* collisionConfig = new btDefaultCollisionConfiguration();
+//    btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfig);
+//    btDbvtBroadphase* overlappingPairCache = new btDbvtBroadphase();
+//    btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+//    dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfig);
+//
+//    dynamicsWorld->setGravity(btVector3(0.0f, -9.8f, 0.0f));
+//}
+
+//btCollisionObject* createCollisionObject(glm::mat4 objectModelMatrix){
+//    btBoxShape* mCheckpointBox = new btBoxShape(btVector3(1,3,1));
+//    btCollisionObject* mCheckpointObject = new btCollisionObject();
+//    mCheckpointObject->setCollisionShape(mCheckpointBox);
+//    btTransform checkpointWorld;
+//    checkpointWorld.setIdentity();
+//
+//    glm::vec3 scale;
+//    glm::quat rotationQuat;
+//    glm::vec3 translation;
+//    glm::vec3 skew;
+//    glm::vec4 perspective;
+//    glm::decompose(objectModelMatrix, scale, rotationQuat, translation, skew, perspective);
+//
+//    checkpointWorld.setOrigin(btVector3(translation.x, translation.y, translation.z));
+//    mCheckpointObject->setWorldTransform(checkpointWorld);
+//    dynamicsWorld->addCollisionObject(mCheckpointObject);
+//    return mCheckpointObject;
+//}
+
+
+void checkpointCollisionDetection(){
+    glm::vec3 scale;
+    glm::quat rotationQuat;
+    glm::vec3 translation;
+    glm::vec3 skew;
+    glm::vec4 perspective;
+    glm::decompose(car1->getModelMatrix(), scale, rotationQuat, translation, skew, perspective);
+
+    for(int i = 0; i < checkpoints.size(); i++)
+    {
+        if(translation.x >= checkpoints[i].areaXZ[0] && translation.x <= checkpoints[i].areaXZ[1] &&
+           translation.z >= checkpoints[i].areaXZ[2] && translation.z <= checkpoints[i].areaXZ[3]){
+            if(checkpoints[i>0? i-1 : checkpoints.size()-1].passed == true) // if predecessor is passed
+            {
+                if(i == 0){
+                    currentLap++;
+                    checkpoints[checkpoints.size()-1].passed = false;
+                    if(currentLap == LAPS)
+                    {
+                        timeFinished = glfwGetTime();
+                        printf("***** FINISHED! *****\n");
+                    } else {
+                        printf("Lap %d / %d \n", currentLap, LAPS);
+                    }
+                } else
+                {
+                    printf("\tCheckpoint %d / %d \n\t", i, (int) checkpoints.size()-1);
+
+                }
+                checkpoints[i-1].passed = false;
+                checkpoints[i].passed = true;
+                printf("%02d:%.2f \n", (int) glfwGetTime()/60, std::fmod(glfwGetTime(), 60.0f));
+            }
+        }
+    }
+    
+    
+//    btCollisionObjectArray collisionObjects = dynamicsWorld->getCollisionObjectArray();
+    
+//    dynamicsWorld->performDiscreteCollisionDetection();
+//    int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
+//    for (int i=0;i<numManifolds;i++)
+//    {
+//        cout << "entered for loop collisionDetection \n";
+//        btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+//        const btCollisionObject* obA = contactManifold->getBody0();
+//        const btCollisionObject* obB = contactManifold->getBody1();
+//        cout << obA;
+//        cout << "\n";
+//        cout << obB;
+//        cout << "\n";
+//        cout << carCollider;
+//        cout << "\n";
+//    }
 }
