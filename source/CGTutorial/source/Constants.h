@@ -1,3 +1,3 @@
 #pragma once
 
-const int LAPS = 2;
+const int LAPS = 3;

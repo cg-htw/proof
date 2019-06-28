@@ -179,7 +179,7 @@ int main()
     Shader skyboxShader( "resources/shaders/skybox.vs", "resources/shaders/skybox.frag" );
     
     carModel = new Model( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
-    car1 = new Car(*carModel, 2000.0f);
+    car1 = new Car(*carModel, 120.0f);
     car1->scale(1.0/13.5);
     car1->rotateBy(glm::vec3(glm::radians(-90.0), 0.0, glm::radians(90.0)));
     car1->moveBy(glm::vec3(-3.0, 2.0, 2.0)); // TODO: nach hinten verschieben (negativert z wert), führt bisher zum verschwinden
