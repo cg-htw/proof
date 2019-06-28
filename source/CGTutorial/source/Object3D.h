@@ -28,10 +28,6 @@ class Object3D {
             matrix = glm::rotate(matrix, rotation[2], glm::vec3(0.0, 0.0, 1.0) );
         }
     
-        void scale(glm::vec3 scaleVector){
-            matrix = glm::scale(matrix, scaleVector );
-        }
-    
         void setTexture(GLuint textId) {
             this->model.setTexture(textId);
         }
