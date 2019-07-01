@@ -178,6 +178,8 @@ int main()
     
     Shader skyboxShader( "resources/shaders/skybox.vs", "resources/shaders/skybox.frag" );
     
+    Shader lightingShader( "resources/shaders/lighting.vs", "resources/shaders/lighting.frag");
+    
     carModel = new Model( "resources/Car/Chevrolet_Camaro_SS_bkp3.3ds" );
     car1 = new Car(*carModel, 120.0f);
     car1->scale(1.0/13.5);
@@ -211,10 +213,13 @@ int main()
         // TODO: vlt. notwendig mit shader statt programmID fuer die Zeitanzeige
         glUniform1i(glGetUniformLocation(programID, "myTextureSampler"), 0);
         
-        glm::vec3 lightPos = glm::vec3(4,15,-4);
-        glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
+//        glm::vec3 lightPos = glm::vec3(4,15,-4);
+//        glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
+//
+//        sendMVP();
         
-        sendMVP();
+
+        
         
         // Bind our monkey_texture in Texture Unit 0
         //glActiveTexture(GL_TEXTURE0); // because of the option to use multiple texturing it ios required to define which monkey_texture to be active.
@@ -252,6 +257,46 @@ int main()
                            glm::vec3(0, 1, 0 )); // Head is up (set to 0,-1,0 to look upside-down
         sendMVP();
         
+        //        =======================
+        //        =======================
+        //        =======================
+        
+        // Use cooresponding shader when setting uniforms/drawing objects
+        lightingShader.Use( );
+        GLint viewPosLoc = glGetUniformLocation( lightingShader.Program, "viewPos" );
+        glUniform3f( viewPosLoc, translation.x, translation.y, translation.z);
+        // Set material properties
+        glUniform1f( glGetUniformLocation( lightingShader.Program, "material.shininess" ), 32.0f );
+        
+        // Directional light
+        glUniform3f( glGetUniformLocation( lightingShader.Program, "dirLight.direction" ), -0.2f, -1.0f, -0.3f );
+        glUniform3f( glGetUniformLocation( lightingShader.Program, "dirLight.ambient" ), 0.05f, 0.05f, 0.05f );
+        glUniform3f( glGetUniformLocation( lightingShader.Program, "dirLight.diffuse" ), 0.4f, 0.4f, 0.4f );
+        glUniform3f( glGetUniformLocation( lightingShader.Program, "dirLight.specular" ), 0.5f, 0.5f, 0.5f );
+        
+        // SpotLight
+        glUniform3f( glGetUniformLocation( lightingShader.Program, "spotLight.position" ), translation.x + 5.0f, translation.y, translation.z );
+        glUniform3f( glGetUniformLocation( lightingShader.Program, "spotLight.direction" ), direction.x, direction.y, direction.z );
+        glUniform3f( glGetUniformLocation( lightingShader.Program, "spotLight.ambient" ), 0.0f, 0.0f, 0.0f );
+        glUniform3f( glGetUniformLocation( lightingShader.Program, "spotLight.diffuse" ), 1.0f, 1.0f, 1.0f );
+        glUniform3f( glGetUniformLocation( lightingShader.Program, "spotLight.specular" ), 1.0f, 1.0f, 1.0f );
+        glUniform1f( glGetUniformLocation( lightingShader.Program, "spotLight.constant" ), 1.0f );
+        glUniform1f( glGetUniformLocation( lightingShader.Program, "spotLight.linear" ), 0.09f );
+        glUniform1f( glGetUniformLocation( lightingShader.Program, "spotLight.quadratic" ), 0.032f );
+        glUniform1f( glGetUniformLocation( lightingShader.Program, "spotLight.cutOff" ), glm::cos( glm::radians( 12.5f ) ) );
+        glUniform1f( glGetUniformLocation( lightingShader.Program, "spotLight.outerCutOff" ), glm::cos( glm::radians( 15.0f ) ) );
+        
+        // Get the uniform locations
+        GLint modelLoc = glGetUniformLocation( lightingShader.Program, "model" );
+        GLint viewLoc = glGetUniformLocation( lightingShader.Program, "view" );
+        GLint projLoc = glGetUniformLocation( lightingShader.Program, "projection" );
+        // Pass the matrices to the shader
+        glUniformMatrix4fv( viewLoc, 1, GL_FALSE, glm::value_ptr( view ) );
+        glUniformMatrix4fv( projLoc, 1, GL_FALSE, glm::value_ptr( projection ) );
+        
+        //        =======================
+        //        =======================
+        //        =======================
         
         //get time since game started
         GLint64 timer;
@@ -457,6 +502,8 @@ void buildLevel1()
 
 void drawLevel1()
 {
+    glUseProgram(programID);
+
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0.0, -0.01, 0.0));
     sendMVP();
