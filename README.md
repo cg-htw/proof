@@ -6,27 +6,30 @@ In diesem Projekt haben wir ein kleines Autorennspiel gebaut.
 - Straßenrundkurs
 - Checkpoints und Ziellinie
 - Rundenzeiten und Gesamtzeit
-- Geist der schnellsten Gesamtzeit
+	- Inkl. Zeitdifferenz zu Rekord
+- Geist (zweites Auto), den Rekord repräsentiert
 - Skybox
 
 ## Steuerung
-- `↑` forwärts fahren
-- `↓` rückwärts fahren 
+- `↑` forwärts fahren (beschleunigen)
+- `↓` rückwärts fahren (bremsen und negativ beschleunigen)
 - `←` nach links lenken 
 - `→` nach rechts lenken 
 - `leertaste` bremsen
+Wird weder positiv noch negativ beschleunigt so wird leicht gebremst.
+
 
 ## Straßenrundkurs
-Die Straße und die Landschaft wurde mit Maya erstellt und als .fbx 3D-Modell exportiert und dann mit ASSIMP in das Programm eingebunden.
+Die Straße, Checkpoint, Ziellinie und Landschaft wurden mit Maya erstellt und als .fbx 3D-Modell exportiert und dann mit ASSIMP in das Programm eingebunden.
 
 ## Checkpoints, Ziellinie und Zeiten
-Auf der Rennstrecke gibt es eine Ziellinie und einen Checkpoint, diese werden genutzt um die Rundenzeiten und Zwischenzeiten zu ermitteln. Die Zeiten werden auf der Konsole ausgegeben. Nach einem kompletten Rennen, was standardmäßig aus 3 Runden besteht wird die Gesamtzeit mit der aktuellen Bestzeit verglichen, falls noch keine Bestzeit existiert oder die aktuelle Zeit schneller ist, wird die aktuelle Zeit gespeichert.
+Auf der Rennstrecke gibt es eine Ziellinie und einen Checkpoint, diese werden genutzt um die Rundenzeiten und Zwischenzeiten zu ermitteln. Die Zeiten werden auf der Konsole ausgegeben. Nach einem kompletten Rennen, was standardmäßig aus 3 Runden besteht wird die Gesamtzeit mit der aktuellen Bestzeit verglichen, falls noch keine Bestzeit existiert oder die aktuelle Zeit schneller ist wird der Rekord in einer Datei gespeichert/überschrieben. In der Datei werden die Rundenzeiten und die Model-Matrizen der Fahrt mit den zugehörigen Zeitstempeln gespeichert.
 
 ![Zeitenausgabe 1](zeitenausgabe_1.png)
-Die erste Gesamtzeit wurde als neue Bestzeit gespeichert.
+Durchfahren von Checkpoints und der Ziellinie (sofern alle Checkpoints der Runde durchfahren sind) führt zu Konsolenausgaben mit Zeitangaben. Da alle Runden vollendet wurden und noch kein Rekord Vorlag wird beim Beenden des Programms die Fahrt in dem unter dem angegebenen Pfad gespeichert und wird bis zur aktualisierung von dem Geist wiederholt werden.
 
 ![Zeitenausgabe 2](zeitenausgabe_2.png)
-Die neue Gesamtzeit ist besser als die alte Bestzeit und wird bei jedem Checkpoint mit der alten Gesamtzeit verglichen, am Ende wird die neue Gesamtzeit als neue Bestzeit festgehalten und in die Datei geschrieben.
+Zeitdifferenzen beim vollenden von Runden werden in der Konsole ebenfalls ausgegeben. Da die Gesamtzeit geringer als die bisherige Bestzeit war wird die Rekord-Datei aktualisiert. 
 
 ## Geist
-Während der Fahrt wird die Position des Autos ständig gespeichert und in eine Datei geschrieben. Falls eine neue Bestzeit entstanden sein sollte, oder noch keine Bestzeit existiert wird für das nächste Rennen aus den gespeicherten Positionen des Autos ein Geist erstellt, der die Rennstrecke entsprechend der Datei abfährt.
+Existiert ein Rekord, so wird dieser durch ein zweites Auto (den "Geist") repräsentiert, welches anhand der in der Datei gespeicherten und Zeitstempeln zugeorndeten Model-Matrizen bewegt wird. 
