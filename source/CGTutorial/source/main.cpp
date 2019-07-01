@@ -543,7 +543,7 @@ void checkpointCollisionDetection(){
                 printf("%02d:%02d:%02d ", min, sec, mil);
                 
                 if(recordTimestamps.size() >= currentLap && i == 0 ){
-                    float deltaTime = currentTime - recordTimestamps.at(i);
+                    float deltaTime = currentTime - recordTimestamps.at(currentLap - 1);
                     printf("(%+2.2fs)", deltaTime);
                 }
                 cout << "\n";
