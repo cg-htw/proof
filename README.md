@@ -33,3 +33,19 @@ Zeitdifferenzen beim vollenden von Runden werden in der Konsole ebenfalls ausgeg
 
 ## Geist
 Existiert ein Rekord, so wird dieser durch ein zweites Auto (den "Geist") repräsentiert, welches anhand der in der Datei gespeicherten und Zeitstempeln zugeorndeten Model-Matrizen bewegt wird. 
+
+## Resourcen und Quellen
+- Benutzte Libraries
+	- glfw
+	- glew
+	- SOIL
+	- ASSIMP
+- Resourcen
+	- [open.gl](https://open.gl/)
+	- [learnopengl.com](https://learnopengl.com/)
+		- besonders beim Modelloading eingesetzt
+	- Sonar Systems Modern OpenGL
+    	- [Youtube Playlist](https://www.youtube.com/playlist?list=PLRtjMdoYXLf6zUMDJVRZYV-6g6n62vet8)
+    	- [Code](https://github.com/SonarSystems/Modern-OpenGL-Tutorials)
+		- wurden besonders bei der Skybox eingesetzt
+    - Code aus den Übungen
