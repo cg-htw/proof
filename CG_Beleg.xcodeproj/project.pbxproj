@@ -43,27 +43,8 @@
 /* Begin PBXFileReference section */
 		182095B122B8F504004552BB /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = source/common/external/libs/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
 		182095B322B8F572004552BB /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = source/common/external/libs/libglfw.3.3.dylib; sourceTree = "<group>"; };
-		1836056D22AFDEAB00423251 /* libglut.3.10.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglut.3.10.0.dylib; path = source/common/external/libs/libglut.3.10.0.dylib; sourceTree = "<group>"; };
 		1836056F22AFE5A400423251 /* text2D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = text2D.cpp; sourceTree = "<group>"; };
 		1836057022AFE5A400423251 /* text2D.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = text2D.hpp; sourceTree = "<group>"; };
-		185817D622C5F89900B5F492 /* libBullet3Collision.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBullet3Collision.2.88.dylib; path = source/common/external/libs/libBullet3Collision.2.88.dylib; sourceTree = "<group>"; };
-		185817D822C601FB00B5F492 /* libBulletDynamics.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletDynamics.2.88.dylib; path = source/common/external/libs/libBulletDynamics.2.88.dylib; sourceTree = "<group>"; };
-		185817DA22C602E900B5F492 /* libBullet3Common.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBullet3Common.2.88.dylib; path = source/common/external/libs/libBullet3Common.2.88.dylib; sourceTree = "<group>"; };
-		185817DC22C6030000B5F492 /* libBullet3Dynamics.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBullet3Dynamics.2.88.dylib; path = source/common/external/libs/libBullet3Dynamics.2.88.dylib; sourceTree = "<group>"; };
-		185817DE22C6030C00B5F492 /* libBullet3Geometry.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBullet3Geometry.2.88.dylib; path = source/common/external/libs/libBullet3Geometry.2.88.dylib; sourceTree = "<group>"; };
-		185817E022C6031500B5F492 /* libBullet3OpenCL_clew.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBullet3OpenCL_clew.2.88.dylib; path = source/common/external/libs/libBullet3OpenCL_clew.2.88.dylib; sourceTree = "<group>"; };
-		185817E222C603B900B5F492 /* libBulletCollision.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletCollision.2.88.dylib; path = source/common/external/libs/libBulletCollision.2.88.dylib; sourceTree = "<group>"; };
-		185817E422C6042700B5F492 /* libBulletFileLoader.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletFileLoader.2.88.dylib; path = source/common/external/libs/libBulletFileLoader.2.88.dylib; sourceTree = "<group>"; };
-		185817E622C6043300B5F492 /* libBulletWorldImporter.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletWorldImporter.2.88.dylib; path = source/common/external/libs/libBulletWorldImporter.2.88.dylib; sourceTree = "<group>"; };
-		185817E722C6043300B5F492 /* libHACD.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libHACD.2.88.dylib; path = source/common/external/libs/libHACD.2.88.dylib; sourceTree = "<group>"; };
-		185817E822C6043300B5F492 /* libBulletSoftBody.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletSoftBody.2.88.dylib; path = source/common/external/libs/libBulletSoftBody.2.88.dylib; sourceTree = "<group>"; };
-		185817E922C6043300B5F492 /* libBulletXmlWorldImporter.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletXmlWorldImporter.2.88.dylib; path = source/common/external/libs/libBulletXmlWorldImporter.2.88.dylib; sourceTree = "<group>"; };
-		185817EA22C6043300B5F492 /* libConvexDecomposition.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libConvexDecomposition.2.88.dylib; path = source/common/external/libs/libConvexDecomposition.2.88.dylib; sourceTree = "<group>"; };
-		185817EB22C6043300B5F492 /* libBulletRobotics.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletRobotics.2.88.dylib; path = source/common/external/libs/libBulletRobotics.2.88.dylib; sourceTree = "<group>"; };
-		185817EC22C6043300B5F492 /* libLinearMath.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libLinearMath.2.88.dylib; path = source/common/external/libs/libLinearMath.2.88.dylib; sourceTree = "<group>"; };
-		185817ED22C6043300B5F492 /* libBulletInverseDynamicsUtils.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletInverseDynamicsUtils.2.88.dylib; path = source/common/external/libs/libBulletInverseDynamicsUtils.2.88.dylib; sourceTree = "<group>"; };
-		185817EE22C6043300B5F492 /* libBulletInverseDynamics.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libBulletInverseDynamics.2.88.dylib; path = source/common/external/libs/libBulletInverseDynamics.2.88.dylib; sourceTree = "<group>"; };
-		185817EF22C6043300B5F492 /* libGIMPACTUtils.2.88.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGIMPACTUtils.2.88.dylib; path = source/common/external/libs/libGIMPACTUtils.2.88.dylib; sourceTree = "<group>"; };
 		185817FA22C6546300B5F492 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		188478E522B8EEE80028395A /* CarGhost.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CarGhost.cpp; sourceTree = "<group>"; };
 		188478E622B8EEE80028395A /* CarGhost.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CarGhost.hpp; sourceTree = "<group>"; };
@@ -77,9 +58,7 @@
 		18D8A0BD229C63BB000B2709 /* libassimp.4.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.4.1.0.dylib; path = source/common/external/libs/libassimp.4.1.0.dylib; sourceTree = "<group>"; };
 		18D8A0BF229C63CC000B2709 /* libsoil2-debug.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsoil2-debug.a"; path = "source/common/external/libs/libsoil2-debug.a"; sourceTree = "<group>"; };
 		18D8A0C1229C64C4000B2709 /* Mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
-		18D8A0C4229C64C4000B2709 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		18D8A0EA229C64FC000B2709 /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
-		18F4FBAB22A004D100033D13 /* Behaviour.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Behaviour.hpp; sourceTree = "<group>"; };
 		B9F1A7941CFED506001A5641 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		B9F1A7951CFED506001A5641 /* objects.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = objects.cpp; sourceTree = "<group>"; };
 		B9F1A7961CFED506001A5641 /* objects.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = objects.hpp; sourceTree = "<group>"; };
@@ -119,27 +98,8 @@
 		185840F3229C598300848119 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				185817EE22C6043300B5F492 /* libBulletInverseDynamics.2.88.dylib */,
-				185817ED22C6043300B5F492 /* libBulletInverseDynamicsUtils.2.88.dylib */,
-				185817EB22C6043300B5F492 /* libBulletRobotics.2.88.dylib */,
-				185817E822C6043300B5F492 /* libBulletSoftBody.2.88.dylib */,
-				185817E622C6043300B5F492 /* libBulletWorldImporter.2.88.dylib */,
-				185817E922C6043300B5F492 /* libBulletXmlWorldImporter.2.88.dylib */,
-				185817EA22C6043300B5F492 /* libConvexDecomposition.2.88.dylib */,
-				185817EF22C6043300B5F492 /* libGIMPACTUtils.2.88.dylib */,
-				185817E722C6043300B5F492 /* libHACD.2.88.dylib */,
-				185817EC22C6043300B5F492 /* libLinearMath.2.88.dylib */,
-				185817E422C6042700B5F492 /* libBulletFileLoader.2.88.dylib */,
-				185817E222C603B900B5F492 /* libBulletCollision.2.88.dylib */,
-				185817E022C6031500B5F492 /* libBullet3OpenCL_clew.2.88.dylib */,
-				185817DE22C6030C00B5F492 /* libBullet3Geometry.2.88.dylib */,
-				185817DC22C6030000B5F492 /* libBullet3Dynamics.2.88.dylib */,
-				185817DA22C602E900B5F492 /* libBullet3Common.2.88.dylib */,
-				185817D822C601FB00B5F492 /* libBulletDynamics.2.88.dylib */,
-				185817D622C5F89900B5F492 /* libBullet3Collision.2.88.dylib */,
 				182095B322B8F572004552BB /* libglfw.3.3.dylib */,
 				182095B122B8F504004552BB /* libGLEW.2.1.0.dylib */,
-				1836056D22AFDEAB00423251 /* libglut.3.10.0.dylib */,
 				18D8A0BF229C63CC000B2709 /* libsoil2-debug.a */,
 				18D8A0BD229C63BB000B2709 /* libassimp.4.1.0.dylib */,
 			);
@@ -183,7 +143,6 @@
 				18D8A0C1229C64C4000B2709 /* Mesh.h */,
 				18938D7C22AFC2A40012FC3C /* Model.cpp */,
 				18938D7D22AFC2A40012FC3C /* Model.hpp */,
-				18D8A0C4229C64C4000B2709 /* Camera.h */,
 				18938D7822AFBC680012FC3C /* Car.cpp */,
 				18938D7922AFBC680012FC3C /* Car.hpp */,
 				18D8A0EA229C64FC000B2709 /* Shader.h */,
@@ -194,7 +153,6 @@
 				B9F1A79A1CFED506001A5641 /* shader.hpp */,
 				B9F1A79B1CFED506001A5641 /* texture.cpp */,
 				B9F1A79C1CFED506001A5641 /* texture.hpp */,
-				18F4FBAB22A004D100033D13 /* Behaviour.hpp */,
 				1836056F22AFE5A400423251 /* text2D.cpp */,
 				1836057022AFE5A400423251 /* text2D.hpp */,
 				18B46BC422B69DDC000D3444 /* Input.hpp */,
