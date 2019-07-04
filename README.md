@@ -16,7 +16,7 @@ In diesem Projekt haben wir ein kleines Autorennspiel gebaut.
 - `←` nach links lenken 
 - `→` nach rechts lenken 
 - `leertaste` bremsen
-Wird weder positiv noch negativ beschleunigt so wird leicht gebremst.
+Wird weder positiv noch negativ beschleunigt, so wird leicht gebremst.
 
 
 ## Straßenrundkurs
@@ -43,9 +43,11 @@ Existiert ein Rekord, so wird dieser durch ein zweites Auto (den "Geist") reprä
 - Resourcen
 	- [open.gl](https://open.gl/)
 	- [learnopengl.com](https://learnopengl.com/)
-		- besonders beim Modelloading eingesetzt
-	- Sonar Systems Modern OpenGL
-    	- [Youtube Playlist](https://www.youtube.com/playlist?list=PLRtjMdoYXLf6zUMDJVRZYV-6g6n62vet8)
-    	- [Code](https://github.com/SonarSystems/Modern-OpenGL-Tutorials)
-		- wurden besonders bei der Skybox eingesetzt
-    - Code aus den Übungen
+	- [SonarSystems/Modern-OpenGL-Tutorials](https://github.com/SonarSystems/Modern-OpenGL-Tutorials)
+		- Verwendet beim Modelloading ([Code Modelloading](https://github.com/SonarSystems/Modern-OpenGL-Tutorials/tree/master/%5BMODEL%20LOADING%5D))
+		- Verwendet für die Skybox ([Code Skybox](https://github.com/SonarSystems/Modern-OpenGL-Tutorials/tree/master/%5BADVANCED%20OPENGL%5D/%5B17%5D%20Cubemap:Skybox))
+    	- [Car Model](https://free3d.com/3d-model/chevrolet-camaro-ss-coupe-373476.html) 
+		- Model des Autos, aus der kostenlos verfügbaren Blender Datei exportiert. 
+    	- Code aus den Übungen
+	- [Stackoverflow Read floats from a .txt file](https://stackoverflow.com/questions/8421170/read-floats-from-a-txt-file) 
+		- Verwendet um istringstream zu verstehen für das Einlesen der Datei, die den Geist steuert (Methode: CarGhost::readRecordFile(...))
