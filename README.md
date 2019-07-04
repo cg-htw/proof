@@ -46,8 +46,8 @@ Existiert ein Rekord, so wird dieser durch ein zweites Auto (den "Geist") reprä
 	- [SonarSystems/Modern-OpenGL-Tutorials](https://github.com/SonarSystems/Modern-OpenGL-Tutorials)
 		- Verwendet beim Modelloading ([Code Modelloading](https://github.com/SonarSystems/Modern-OpenGL-Tutorials/tree/master/%5BMODEL%20LOADING%5D))
 		- Verwendet für die Skybox ([Code Skybox](https://github.com/SonarSystems/Modern-OpenGL-Tutorials/tree/master/%5BADVANCED%20OPENGL%5D/%5B17%5D%20Cubemap:Skybox))
-    	- [Car Model](https://free3d.com/3d-model/chevrolet-camaro-ss-coupe-373476.html) 
+	- [Car Model](https://free3d.com/3d-model/chevrolet-camaro-ss-coupe-373476.html) 
 		- Model des Autos, aus der kostenlos verfügbaren Blender Datei exportiert. 
-    	- Code aus den Übungen
 	- [Stackoverflow Read floats from a .txt file](https://stackoverflow.com/questions/8421170/read-floats-from-a-txt-file) 
 		- Verwendet um istringstream zu verstehen für das Einlesen der Datei, die den Geist steuert (Methode: CarGhost::readRecordFile(...))
+	- Code aus den Übungen
